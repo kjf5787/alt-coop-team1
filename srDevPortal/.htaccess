@@ -1,0 +1,4 @@
+SetEnv DB sr_dev_assessments
+SetEnv DB_PASSWORD student
+SetEnv DB_SERVER localhost
+SetEnv DB_USER root
