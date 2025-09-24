@@ -22,7 +22,7 @@ class QuestionDB extends DB {
             $data = $stmt->fetchAll();
 
         } catch(PDOException $pe) {
-            echo $pe->getMessage();
+            error_log($pe->getMessage());
         }
 
         return $data;
@@ -43,10 +43,32 @@ class QuestionDB extends DB {
             $data = $stmt->fetchAll();
 
         } catch(PDOException $pe) {
-            echo $pe->getMessage();
+            error_log($pe->getMessage());
         }
 
         return $data;
+    }
+
+    // inserts a question
+    // returns last insert id if successful
+    function insertQuestion($question, $questionType) {
+
+        $query = "INSERT INTO questions (question, question_type) VALUES (:question, :questionType)";
+
+        try {
+
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([
+                ":question" => $question,
+                ":questionType" => $questionType
+            ]);
+
+            return $this->db->lastInsertId(); // returns id if successful
+
+        } catch(PDOException $pe) {
+            error_log($pe->getMessage());
+            return null;
+        }
     }
 
 }

@@ -22,10 +22,32 @@ class AnswerDB extends DB {
             $data = $stmt->fetchAll();
 
         } catch(PDOException $pe) {
-            echo $pe->getMessage();
+            error_log($pe->getMessage());
         }
 
         return $data;
+    }
+
+    // inserts an answer
+    // returns last insert id if successful
+    function insertAnswer($questionId, $answer) {
+
+        $query = "INSERT INTO answers (question_id, answer) VALUES (:questionId, :answer)";
+
+        try {
+
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([
+                ":questionId" => $questionId,
+                ":answer" => $answer
+            ]);
+
+            return $this->db->lastInsertId(); // returns id if successful
+
+        } catch(PDOException $pe) {
+            error_log($pe->getMessage());
+            return null;
+        }
     }
 
 }
