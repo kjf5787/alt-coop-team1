@@ -2,8 +2,9 @@ USE iste498t02;
 
 INSERT INTO questions (id, question, question_type, input_type)
   VALUES (0, 'What is your preferred name?', 'informational', 'short answer'),
-  (1, 'What is your major?', 'informational', 'multiple choice'),
-  (2, 'What ISTE500 section are you in?', 'informational', 'multiple choice');
+  (1, 'What is your email?', 'informational', 'short answer'),
+  (2, 'What is your major?', 'informational', 'multiple choice'),
+  (3, 'What ISTE500 section are you in?', 'informational', 'multiple choice');
 
 INSERT INTO questions (question, question_type, input_type)
   VALUES ('I work well under pressure.', 'personality', 'scale'),
@@ -23,8 +24,10 @@ INSERT INTO questions (question, question_type, input_type)
   ('Interviewing people I may not know appeals to or comes easily to me.', 'personality', 'scale'),
   ('I work on one task at a time, as opposed to jumping around on tasks.', 'personality', 'scale'),
   ('If I do not know something, I would rather figure it out myself than ask for help.', 'personality', 'scale'),
-  ('If there is a problem, I explore multiple solutions rather than choosing the first one I find.', 'personality', 'scale'),
-  ('How confident are you in your HTML skills?', 'technical', 'scale'),
+  ('If there is a problem, I explore multiple solutions rather than choosing the first one I find.', 'personality', 'scale');
+  
+INSERT INTO questions (question, question_type, input_type)
+  VALUES ('How confident are you in your HTML skills?', 'technical', 'scale'),
   ('How confident are you in your CSS skills?', 'technical', 'scale'),
   ('How confident are you in your JavaScript skills?', 'technical', 'scale'),
   ('How confident are you in your php skills?', 'technical', 'scale'),
@@ -55,8 +58,8 @@ INSERT INTO questions (question, question_type, input_type)
   ('How confident are you in your networking skills?', 'technical', 'scale');
 
 INSERT INTO answers (question_id, answer)
-  VALUES (1, 'WMC'),
-  (1, 'HCC'),
-  (1, 'CIT'),
-  (2, '01'),
-  (2, '02');
+  VALUES (2, 'WMC'),
+  (2, 'HCC'),
+  (2, 'CIT'),
+  (3, '01'),
+  (3, '02');
