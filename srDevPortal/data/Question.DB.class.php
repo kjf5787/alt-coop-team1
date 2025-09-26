@@ -5,9 +5,9 @@ require_once('./DB.class.php');
 
 class QuestionDB extends DB {
 
-    // gets all questions from DB of a certain type
+    // gets all questions from DB of a certain type (informational, personality, or technical)
     // returns an array of Question objects
-    function getQuestionsByType($type){
+    function getQuestionsByQuestionType($type){
 
         $query = "SELECT * FROM questions WHERE question_type = :type";
         $data = [];
@@ -47,28 +47,6 @@ class QuestionDB extends DB {
         }
 
         return $data;
-    }
-
-    // inserts a question
-    // returns last insert id if successful
-    function insertQuestion($question, $questionType) {
-
-        $query = "INSERT INTO questions (question, question_type) VALUES (:question, :questionType)";
-
-        try {
-
-            $stmt = $this->db->prepare($query);
-            $stmt->execute([
-                ":question" => $question,
-                ":questionType" => $questionType
-            ]);
-
-            return $this->db->lastInsertId(); // returns id if successful
-
-        } catch(PDOException $pe) {
-            error_log($pe->getMessage());
-            return null;
-        }
     }
 
 }

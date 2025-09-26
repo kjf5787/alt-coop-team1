@@ -4,6 +4,7 @@ class Question {
     private $id;
     private $question;
     private $questionType;
+    private $inputType;
 
     public function getId() {
         return $this->id;
@@ -24,5 +25,12 @@ class Question {
     }
     public function setQuestionType($questionType) {
         $this->questionType = $questionType;
+    }
+
+    public function getInputType() {
+        return $this->inputType;
+    }
+    public function setInputType($inputType) {
+        $this->inputType = $inputType;
     }
 }

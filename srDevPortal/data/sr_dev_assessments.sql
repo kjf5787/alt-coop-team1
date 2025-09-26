@@ -1,6 +1,4 @@
-CREATE DATABASE IF NOT EXISTS sr_dev_assessments;
-
-USE sr_dev_assessments;
+USE iste498t02;
 
 CREATE TABLE students (
 	id VARCHAR(30) PRIMARY KEY,
@@ -13,7 +11,8 @@ CREATE TABLE students (
 CREATE TABLE questions (
 	id INT AUTO_INCREMENT PRIMARY KEY,
   question TEXT NOT NULL,
-  question_type VARCHAR(255) NOT NULL
+  question_type VARCHAR(255) NOT NULL,
+  input_type VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE student_answers (
