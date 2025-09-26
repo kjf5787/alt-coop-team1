@@ -1,4 +1,7 @@
-SetEnv DB sr_dev_assessments
-SetEnv DB_PASSWORD student
+# DB
+SetEnv DB iste498t02
+SetEnv DB_PASSWORD Grison2%mosslike
 SetEnv DB_SERVER localhost
-SetEnv DB_USER root
+SetEnv DB_USER iste498t02
+
+# RIT Auth
