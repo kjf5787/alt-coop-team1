@@ -3,5 +3,3 @@ SetEnv DB iste498t02
 SetEnv DB_PASSWORD Grison2%mosslike
 SetEnv DB_SERVER localhost
 SetEnv DB_USER iste498t02
-
-# RIT Auth
