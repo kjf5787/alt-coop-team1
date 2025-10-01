@@ -2,17 +2,18 @@ USE iste498t02;
 
 CREATE TABLE students (
 	id VARCHAR(30) PRIMARY KEY,
-	firstName VARCHAR(50) NOT NULL,
-  lastName VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL,
   preferredName VARCHAR(50) NOT NULL,
-  major VARCHAR(10)
+  major VARCHAR(10),
+  section VARCHAR(10)
 );
 
 CREATE TABLE questions (
 	id INT AUTO_INCREMENT PRIMARY KEY,
   question TEXT NOT NULL,
   question_type VARCHAR(255) NOT NULL,
-  input_type VARCHAR(255) NOT NULL
+  input_type VARCHAR(255) NOT NULL,
+  name VARCHAR(50)
 );
 
 CREATE TABLE student_answers (
