@@ -1,7 +1,7 @@
 <?php
 
-require_once('./Student.class.php');
-require_once('./DB.class.php');
+require_once __DIR__ . '/Student.class.php';
+require_once __DIR__ . '/DB.class.php';
 
 class StudentDB extends DB {
 
@@ -47,19 +47,19 @@ class StudentDB extends DB {
 
     // inserts a student
     // returns last insert id if successful
-    function insertStudent($id, $firstName, $lastName, $preferredName, $major) {
+    function insertStudent($id, $email, $preferredName, $major, $section) {
 
-        $query = "INSERT INTO students (id, firstName, lastName, preferredName, major) VALUES (:id, :firstName, :lastName, :preferredName, :major)";
+        $query = "INSERT INTO students (id, email, preferredName, major, section) VALUES (:id, :email, :preferredName, :major, :section)";
 
         try {
 
             $stmt = $this->db->prepare($query);
             $stmt->execute([
                 ":id" => $id,
-                ":firstName" => $firstName,
-                ":lastName" => $lastName,
+                ":email" => $email,
                 ":preferredName" => $preferredName,
-                ":major" => $major
+                ":major" => $major,
+                ":section" => $section
             ]);
 
             return $this->db->lastInsertId(); // returns id if successful

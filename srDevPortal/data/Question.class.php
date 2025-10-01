@@ -3,8 +3,9 @@
 class Question {
     private $id;
     private $question;
-    private $questionType;
-    private $inputType;
+    private $question_type;
+    private $input_type;
+    private $name;
 
     public function getId() {
         return $this->id;
@@ -21,16 +22,23 @@ class Question {
     }
 
     public function getQuestionType() {
-        return $this->questionType;
+        return $this->question_type;
     }
     public function setQuestionType($questionType) {
-        $this->questionType = $questionType;
+        $this->question_type = $questionType;
     }
 
     public function getInputType() {
-        return $this->inputType;
+        return $this->input_type;
     }
     public function setInputType($inputType) {
-        $this->inputType = $inputType;
+        $this->input_type = $inputType;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+    public function setName($name) {
+        $this->id = $name;
     }
 }

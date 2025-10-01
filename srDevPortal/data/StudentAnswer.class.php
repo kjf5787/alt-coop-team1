@@ -5,6 +5,7 @@ class StudentAnswer {
     private $student_id;
     private $question_id;
     private $answer;
+    private $section;
 
     public function getId() {
         return $this->id;
@@ -32,5 +33,12 @@ class StudentAnswer {
     }
     public function setAnswer($answer) {
         $this->answer = $answer;
+    }
+
+    public function getSection() {
+        return $this->section;
+    }
+    public function setSection($section) {
+        $this->section = $section;
     }
 }

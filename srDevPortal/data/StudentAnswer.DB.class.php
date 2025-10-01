@@ -1,7 +1,7 @@
 <?php
 
-require_once('./StudentAnswer.class.php');
-require_once('./DB.class.php');
+require_once __DIR__ . '/StudentAnswer.class.php';
+require_once __DIR__ . '/DB.class.php';
 
 class StudentAnswerDB extends DB {
 
