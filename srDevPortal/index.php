@@ -34,22 +34,30 @@
                 </p>
                 <!-- populate questions and answers from db -->
                 <?php foreach ($informationalQuestions as $q): ?>
-                    <label for="question_<?= $q->getId() ?>"><?= htmlspecialchars($q->getQuestion()) ?></label>
+                    <div class="questionAnswerBox">
+                        <div class="questions informationalQuestions">
+                            <label for="<?= $q->getId() ?>"><?= htmlspecialchars($q->getQuestion()) ?></label>
+                        </div>
 
-                    <?php if (strtolower(trim($q->getInputType())) === 'select'): ?>
-                        <?php
-                        $answers = $answerDB->getAnswersByQuestionId($q->getId());
-                        ?>
-                        <select name="<?= $q->getName() ?>" id="question_<?= $q->getId() ?>">
-                            <option value="">Select...</option>
-                            <?php foreach ($answers as $a): ?>
-                                <option value="<?= htmlspecialchars($a->getId()) ?>"><?= htmlspecialchars($a->getAnswer()) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php if (strtolower(trim($q->getInputType())) === 'select'): ?>
+                            <?php
+                            $answers = $answerDB->getAnswersByQuestionId($q->getId());
+                            ?>
+                            <div class="answers informationalAnswers">
+                                <select name="<?= $q->getName() ?>" id="<?= $q->getId() ?>">
+                                    <option value="">Select...</option>
+                                    <?php foreach ($answers as $a): ?>
+                                        <option value="<?= htmlspecialchars($a->getId()) ?>"><?= htmlspecialchars($a->getAnswer()) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
 
-                    <?php else: ?>
-                        <input type="text" name="<?= $q->getName() ?>" id="question_<?= $q->getId() ?>" />
-                    <?php endif; ?>
+                        <?php else: ?>
+                            <div class="answers informationalAnswers">
+                                <input type="text" name="<?= $q->getName() ?>" id="<?= $q->getId() ?>" placeholder="Your answer" />
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 <?php endforeach; ?>
             </div>
             <div class="q-box">
@@ -59,9 +67,17 @@
 
                 <!-- populate questions from db -->
                 <?php foreach ($personalityQuestions as $q): ?>
-                    <label for="question_<?= $q->getId() ?>"><?= htmlspecialchars($q->getQuestion()) ?></label>
+                    <div class="questionAnswerBox">
+                        <div class="questions personalityQuestions">
+                            <label for="<?= $q->getId() ?>"><?= htmlspecialchars($q->getQuestion()) ?></label>
+                        </div>
 
-                    <input type="range" id="question_<?= $q->getId() ?>" name="question_<?= $q->getId() ?>" min="1" max="5" step="1" value="3">
+                        <div class="answers personalityAnswers">
+                            <p>Strongly Disagree</p>
+                            <input type="range" id="<?= $q->getId() ?>" name="<?= $q->getId() ?>" min="1" max="5" step="1" value="3">
+                            <p>Strongly Agree</p>
+                        </div>
+                    </div>
                 <?php endforeach; ?>
             </div>
             <div class="q-box">
@@ -71,14 +87,22 @@
 
                 <!-- populate questions from db -->
                 <?php foreach ($technicalQuestions as $q): ?>
-                    <label for="question_<?= $q->getId() ?>"><?= htmlspecialchars($q->getQuestion()) ?></label>
+                    <div class="questionAnswerBox">
+                        <div class="questions technicalQuestions">
+                            <label for="<?= $q->getId() ?>"><?= htmlspecialchars($q->getQuestion()) ?></label>
+                        </div>
 
-                    <input type="range" id="question_<?= $q->getId() ?>" name="question_<?= $q->getId() ?>" min="1" max="5" step="1" value="3">
+                        <div class="answers technicalAnswers">
+                            <p>Not At All</p>
+                                <input type="range" id="<?= $q->getId() ?>" name="<?= $q->getId() ?>" min="1" max="5" step="1" value="3">
+                            <p>Extremely</p>
+                        </div>
+                    </div>
                 <?php endforeach; ?>
             </div>
 
             <div class="submit-box">
-                <button type="submit">Submit</button>
+                <input type="submit" value="Submit">
             </div>
         </form>
     </body>
