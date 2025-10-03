@@ -5,6 +5,7 @@ html{
 
 body{
     margin: 0%;
+    margin-bottom: 5%;
 }
 
 /*--- Header CSS ---*/
@@ -16,8 +17,11 @@ header{
 }
 
 #logo{
-    max-height: fit-content;
+    max-height: 35px;
+    height: auto;
+    width: auto;
     padding: 1%;
+    display: block;  
 }
 
 /*--- End Header CSS ---*/
@@ -52,19 +56,96 @@ header{
 .q-box{
     background-color: white;
     border-radius: 5px;
-    box-shadow: 1px 1px 2px gray;
+    box-shadow: 0 0 1px #BEBEBE;
     width: 50%;
     padding: 2%;
     margin: 1%;
+    display: flex;
+    gap: 10px; 
+    flex-direction: column;
 }
 
 .q-section-title{
     font-weight: bold;
+    font-size: 1.2em;
     margin-top: 0;
 }
 
 .question{
     margin-top: 0;
+}
+
+.questions{
+    padding: 1% 0 1% 0;
+}
+
+.answers{
+    padding: 5px;
+}
+
+.questionAnswerBox{
+    padding-bottom: 14px;
+}
+
+.answers input[type="text"]{
+    border: none;
+    border-bottom: 1px solid #858585;
+    background-color: transparent;
+    padding: 4px 2px;
+    outline: none;
+    font-size: 90%;
+    width: 200px;
+}
+.answers input[type="text"]:focus {
+    border-bottom-color: #DEA485;
+}
+
+.answers input[type="text"]::placeholder {
+    color: #858585;
+    font-size: 90%;
+}
+
+.answers.technicalAnswers,
+.answers.personalityAnswers {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 80%;
+}
+
+.answers.technicalAnswers input[type="range"],
+.answers.personalityAnswers input[type="range"] {
+    width: 50%;
+    flex-grow: 1; 
+}
+
+.answers.technicalAnswers p,
+.answers.personalityAnswers p {
+    width: 20%;
+    margin: 0 5px;
+    font-size: 90%;
+    color: #858585;
+    text-align: center;
+}
+
+.submit-box input[type="submit"] {
+    background-color: #B2B2B2;      /* dark gray */
+    color: #fff;                 /* white text */
+    padding: 8px 16px;           /* comfortable size */
+    border: none;                /* remove default border */
+    border-radius: 4px;          /* slightly rounded corners */
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px 0 20px 0;
+}
+
+.submit-box input[type="submit"]:hover {
+    background-color: #969696;      /* lighter gray on hover */
 }
 
 /*--- End Questions CSS ---*/
