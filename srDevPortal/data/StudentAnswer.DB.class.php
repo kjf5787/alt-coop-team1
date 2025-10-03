@@ -88,7 +88,7 @@ class StudentAnswerDB extends DB {
 
         } catch(PDOException $pe) {
             error_log($pe->getMessage());
-            return null;
+            return false;
         }
     }
 
