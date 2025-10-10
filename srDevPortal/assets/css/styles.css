@@ -105,11 +105,8 @@ header{
     font-size: 90%;
 }
 
-.answers.technicalAnswers,
-.answers.personalityAnswers {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+.rangeSlider {
+    text-align: center;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -118,10 +115,48 @@ header{
     width: 80%;
 }
 
-.answers.technicalAnswers input[type="range"],
-.answers.personalityAnswers input[type="range"] {
+.inputSlider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 10px;
+    background: #e0e0e0;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .15s ease-in-out;
+    border-radius: 10px;
     width: 50%;
     flex-grow: 1; 
+}
+
+.inputSlider:hover {
+    opacity: 1;
+}
+
+.inputSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #DEA485;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: background .3s ease-in-out;
+}
+
+.inputSlider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: background .3s ease-in-out;
+}
+
+.inputSlider::-webkit-slider-thumb:hover,
+.inputSlider::-moz-range-thumb:hover {
+    background: #45a049;
 }
 
 .answers.technicalAnswers p,
@@ -133,19 +168,67 @@ header{
     text-align: center;
 }
 
+.dropdown {
+    position: relative;
+    width: 200px;
+    user-select: none;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-size: 90%;
+}
+
+.dropdown-selected {
+    padding: 10px 12px;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 0 2px #BEBEBE;
+}
+
+.dropdown-options {
+    display: none; 
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 0 2px #BEBEBE;
+    border-radius: 0 0 8px 8px;
+    margin-top: 2px;
+    z-index: 10;
+    max-height: 180px;
+    overflow-y: auto;
+    font-size: 90%;
+}
+
+.dropdown-options div {
+    padding: 10px 12px;
+    transition: background 0.2s ease;
+}
+
+.dropdown-options div:hover {
+    background-color: #F1E5DF;
+}
+
+.dropdown-selected::after {
+    content: "▾";
+    float: right;
+    margin-left: 8px;
+    color: #999;
+    font-size: 12px;
+}
+
 .submit-box input[type="submit"] {
-    background-color: #B2B2B2;      /* dark gray */
-    color: #fff;                 /* white text */
-    padding: 8px 16px;           /* comfortable size */
-    border: none;                /* remove default border */
-    border-radius: 4px;          /* slightly rounded corners */
+    background-color: #DEA485;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
     font-size: 16px;
     cursor: pointer;
     margin: 10px 0 20px 0;
 }
 
 .submit-box input[type="submit"]:hover {
-    background-color: #969696;      /* lighter gray on hover */
+    background-color: #CE8C69;
 }
 
 /*--- End Questions CSS ---*/
