@@ -16,21 +16,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $preferredName = $_POST['preferredName'] ?? null;
     $major = $_POST['major'] ?? null;
     $section = $_POST['section'] ?? null;
+    $term = $_POST['term'] ?? null;
 
     // insert student
-    if($studentId !== null && $preferredName !== null && $major !== null && $section !== null){
+    if($studentId !== null && $preferredName !== null && $major !== null && $section !== null && $term !== null){
         // validate and sanitize
         $studentId = sanitize($studentId);
         $preferredName = sanitize($preferredName);
         $major = sanitize($major);
         $section = sanitize($section);
+        $term = sanitize($term);
 
         $studentId = validateStr($studentId, 30); // max 30 chars
         $preferredName = validateStr($preferredName, 50); // max 50 chars
         $major = validateStr($major, 10); // max 10 chars
         $section = validateStr($section, 10); // max 10 chars
+        $term = validateStr($section, 10); // max 10 chars
 
-        if ($studentId === false || $preferredName === false || $major === false || $section === false) {
+        if ($studentId === false || $preferredName === false || $major === false || $section === false || $term === false) {
             // todo more user friendly response
             echo "Error: One or more fields are invalid.";
             exit;
@@ -45,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         // get question answers from form
-        $ignoredKeys = ['id', 'preferredName', 'major', 'section'];
+        $ignoredKeys = ['id', 'preferredName', 'major', 'section', 'term'];
         $studentAnswers = [];
         foreach ($_POST as $key => $value) {
             if (in_array($key, $ignoredKeys)) {
@@ -67,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // insert student to db
         $email = $studentId . $emailDomain;
         $student = $studentDB->insertStudent($studentId, $email, $preferredName, $major, $section);
-        if(!$student){
+        if($student === false){
             // todo more user friendly response
             echo "Error: Could not insert student";
             exit;
@@ -76,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // insert answers to db
         foreach ($studentAnswers as $questionId => $answer) {
             $answer = $studentAnswerDB->insertStudentAnswer($studentId, $questionId, $answer);
-            if(!$answer){
+            if($answer === false){
                 // todo more user friendly response
                 echo "Error: Could not insert question $key";
                 exit;
