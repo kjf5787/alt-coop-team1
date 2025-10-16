@@ -76,7 +76,7 @@ header{
 }
 
 .questions{
-    padding: 1% 0 1% 0;
+    padding: 8px 0 8px 0;
 }
 
 .answers{
@@ -87,7 +87,7 @@ header{
     padding-bottom: 14px;
 }
 
-.answers input[type="text"]{
+.answers input[type="text"], .login-box input[type="text"]{
     border: none;
     border-bottom: 1px solid #858585;
     background-color: transparent;
@@ -96,11 +96,12 @@ header{
     font-size: 90%;
     width: 200px;
 }
-.answers input[type="text"]:focus {
+
+.answers input[type="text"]:focus, .login-box input[type="text"]:focus {
     border-bottom-color: #DEA485;
 }
 
-.answers input[type="text"]::placeholder {
+.answers input[type="text"]::placeholder, .login-box input[type="text"]::placeholder {
     color: #858585;
     font-size: 90%;
 }
@@ -232,6 +233,53 @@ header{
 }
 
 /*--- End Questions CSS ---*/
+/*--- Login CSS ---*/
+.login-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-container h1 {
+    text-align: center;
+}
+
+.l-box{
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 1px #BEBEBE;
+    width: 50%;
+    padding: 2%;
+    margin: 1%;
+    display: flex;
+    gap: 10px; 
+    flex-direction: column;
+}
+
+.login-box{
+    width: 40%;
+    margin: auto;
+    padding-bottom: 20px;
+}
+
+.login-box input[type="text"] {
+    width: 100%;
+    padding: 5px;
+}
+
+#login-s-box {
+    text-align: center;
+}
+
+.login-box input[type="text"]{
+    font-size: 100%;
+}
+
+login-box input[type="text"]::placeholder {
+    color: #858585;
+    font-size: 100%;
+}
+/*--- End Login CSS ---*/
 
 /* Set display layout for tablets and mobile devices */
 
