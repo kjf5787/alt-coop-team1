@@ -83,7 +83,7 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    window.location.href = processForm.php;
+                    window.location.href = index.php;
                 } else {
                     messageDiv.textContent = result.message;
                 }
