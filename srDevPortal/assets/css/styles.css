@@ -281,6 +281,23 @@ login-box input[type="text"]::placeholder {
 }
 /*--- End Login CSS ---*/
 
+/*--- Admin CSS ---*/
+
+.admin-container {
+    width: 50%;
+    padding: 2%;
+    margin: auto;
+    display: flex;
+    gap: 10px; 
+    flex-direction: column;
+}
+
+.admin-container .dropdown {
+    width: 250px;
+}
+
+/*--- End Admin CSS ---*/
+
 /* Set display layout for tablets and mobile devices */
 
 @media screen and (max-width: 800px){
