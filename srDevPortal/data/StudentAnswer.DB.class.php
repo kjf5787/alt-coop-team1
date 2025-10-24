@@ -47,6 +47,47 @@ class StudentAnswerDB extends DB {
         return $data;
     }
 
+    // gets all student answers with questions
+    function getQuestionsAndAnswers() {
+        $query = "SELECT s.id, q.question, sa.answer
+            FROM student_answers AS sa
+            JOIN students AS s ON sa.student_id = s.id
+            JOIN questions AS q ON sa.question_id = q.id;";
+        $data = [];
+
+        try {
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC); // returns array of rows
+        } catch (PDOException $pe) {
+            error_log($pe->getMessage());
+        }
+    
+        return $data;
+    }
+
+    // gets all student q and a's by class
+    function getAnswersByClass($section){
+        $query = "SELECT s.id, q.question, sa.answer
+            FROM student_answers AS sa
+            JOIN students AS s ON sa.student_id = s.id
+            JOIN questions AS q ON sa.question_id = q.id
+            WHERE s.section = :section;";
+        $data = [];
+
+        try {
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([
+                ":section" => $section
+            ]);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC); // returns array of rows
+        } catch (PDOException $pe) {
+            error_log($pe->getMessage());
+        }
+    
+        return $data;
+    }
+
     // gets all answers for a specific question
     // returns an array of answers
     function getAnswersByQuestionId($questionId) {
