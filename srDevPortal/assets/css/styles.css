@@ -280,6 +280,58 @@ login-box input[type="text"]::placeholder {
     font-size: 100%;
 }
 /*--- End Login CSS ---*/
+         /*--- Start submit CSS ---*/
+.submit-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.s-box {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 1px #BEBEBE;
+    width: 50%;
+    padding: 2%;
+    margin: 1%;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+.submit-box {
+    width: 40%;
+    margin: auto;
+    padding-bottom: 20px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #333;
+}
+ /*--- end submit CSS ---*/
+  /*--- Start error CSS ---*/
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.e-box {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 1px #BEBEBE;
+    width: 50%;
+    padding: 2%;
+    margin: 1%;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+.error-box {
+    width: 40%;
+    margin: auto;
+    padding-bottom: 20px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #fe0000;
+}
+  /*--- end error CSS ---*/
 
 /*--- Admin CSS ---*/
 
