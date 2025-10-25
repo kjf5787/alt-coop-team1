@@ -10,7 +10,7 @@ Run app.js in node
 Go to localhost:3000
 Right now it just displays the output from the arduino.
 
-##To-do
+## To-do
 Make it look good
 Timestamps
 Alerts when moisture level drops too low
