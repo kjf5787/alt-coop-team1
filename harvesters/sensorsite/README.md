@@ -6,12 +6,12 @@
 ## Usage
 
 Change arduinoPort variable to the port your arduino is using
--Run app.js in node
--Go to localhost:3000
--Right now it just displays the output from the arduino.
+- Run app.js in node
+- Go to localhost:3000
+- Right now it just displays the output from the arduino.
 
 ## To-do
--Make it look good
--Timestamps
--Alerts when moisture level drops too low
+- Make it look good
+- Timestamps
+- Alerts when moisture level drops too low
 
