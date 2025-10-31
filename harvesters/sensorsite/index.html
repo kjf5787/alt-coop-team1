@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js'></script>
+    <script>
+
+
+    var socket = io();
+    socket.on('data', function(data) {
+        console.log(data);
+        var readingsList = document.getElementById("readings");
+        readingsList.textContent += data+'\n'
+    });
+    </script>
+  </head>
+  <body>
+
+    <h1>Moisture</h1>
+    <div id="readings">Readings:</div>
+
+  </body>
+</html>
