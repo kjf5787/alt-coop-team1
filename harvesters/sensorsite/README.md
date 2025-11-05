@@ -14,4 +14,4 @@
 - Make it look good
 - Cleaner timestamps
 - External alerts when moisture level drops too low
--Get constants from Arduino
+- Get constants from Arduino
