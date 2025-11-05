@@ -12,6 +12,6 @@
 
 ## To-do
 - Make it look good
-- Timestamps
-- Alerts when moisture level drops too low
+- Cleaner timestamps
+- External alerts when moisture level drops too low
 
