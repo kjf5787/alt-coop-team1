@@ -5,19 +5,41 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js'></script>
     <script>
 
+      const AirValue = 54;     // Min moisture value (calibrated via open air sensor reading)
+      const WaterValue = 35;   // Max moisture value (calibrated via total water submersion sensor reading)
+      const MoisturePref = 21;
+      var lowCount = 0 // make sure moisture is actually low to avoid bad readings causing alerts
+      
 
     var socket = io();
     socket.on('data', function(data) {
-        console.log(data);
+        const dataSplit = data.split(" ")
+        var intReading = Number(dataSplit[2])
         var readingsList = document.getElementById("readings");
-        readingsList.textContent += data+'\n'
+        var timestamp = new Date().toUTCString();
+        var entry = document.createElement('li');
+        entry.textContent = data + " on:   " + timestamp;
+        readingsList.appendChild(entry);
+        if(lowCount>3){
+          alert("Reading below minimum moisture preference");
+        }
+        if(intReading<MoisturePref){
+          lowCount++;
+        }
+        else{
+          lowcount = 0;
+        }
     });
     </script>
   </head>
   <body>
 
     <h1>Moisture</h1>
-    <div id="readings">Readings:</div>
+    <div>
+
+    <ul id="readings"></ul>
+
+    </div>
 
   </body>
 </html>
