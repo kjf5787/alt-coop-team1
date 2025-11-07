@@ -348,6 +348,43 @@ login-box input[type="text"]::placeholder {
     width: 250px;
 }
 
+/* searchable dropdown input field */
+.admin-container .dropdown-options .dropdown-search {
+    display: block;
+    width: calc(100% - 16px);
+    margin: 6px auto;
+    padding: 7px 9px;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    font-size: 90%;
+    font-family: inherit;
+    color: #333;
+    outline: none;
+    box-sizing: border-box;
+    box-shadow: 0 0 2px rgba(0,0,0,0.05);
+}
+
+.admin-container .dropdown-options .dropdown-search:focus {
+    border-color: #b7b7b7;
+    box-shadow: 0 0 3px rgba(0,0,0,0.08);
+}
+
+/* space between search and options */
+.admin-container .dropdown-options {
+    padding-top: 4px;
+}
+
+/* subtle divider between each option (optional) */
+.admin-container .dropdown-options div[data-value] {
+    border-top: 1px solid #f6f6f6;
+}
+
+/* optional: slightly stronger shadow for admin dropdowns */
+.admin-container .dropdown-options {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
+}
+
 /*--- End Admin CSS ---*/
 
 /* Set display layout for tablets and mobile devices */
