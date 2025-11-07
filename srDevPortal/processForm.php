@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $preferredName = validateStr($preferredName, 50); // max 50 chars
         $major = validateStr($major, 10); // max 10 chars
         $section = validateStr($section, 10); // max 10 chars
-        $term = validateStr($section, 10); // max 10 chars
+        $term = validateStr($section, 50); // max 50 chars
 
         if ($studentId === false || $preferredName === false || $major === false || $section === false || $term === false) {
             // todo more user friendly response
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // insert student to db
         $email = $studentId . $emailDomain;
-        $student = $studentDB->insertStudent($studentId, $email, $preferredName, $major, $section);
+        $student = $studentDB->insertStudent($studentId, $email, $preferredName, $major, $section, $term);
         if($student === false){
             // todo more user friendly response
             echo "Error: Could not insert student";
