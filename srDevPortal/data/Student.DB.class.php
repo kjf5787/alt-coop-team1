@@ -45,11 +45,28 @@ class StudentDB extends DB {
         }
     }
 
+    // gets the ids of all students
+    function getAllStudentIds() {
+        $query = "SELECT id FROM students";
+        $data = [];
+
+        try {
+
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+        } catch(PDOException $pe) {
+            error_log($pe->getMessage());
+        }
+
+        return $data;
+    }
+
     // inserts a student
     // returns last insert id if successful
-    function insertStudent($id, $email, $preferredName, $major, $section) {
+    function insertStudent($id, $email, $preferredName, $major, $section, $term) {
 
-        $query = "INSERT INTO students (id, email, preferredName, major, section) VALUES (:id, :email, :preferredName, :major, :section)";
+        $query = "INSERT INTO students (id, email, preferredName, major, section, term) VALUES (:id, :email, :preferredName, :major, :section, :term)";
 
         try {
 
@@ -59,7 +76,8 @@ class StudentDB extends DB {
                 ":email" => $email,
                 ":preferredName" => $preferredName,
                 ":major" => $major,
-                ":section" => $section
+                ":section" => $section,
+                ":term" => $term
             ]);
 
             return $this->db->lastInsertId(); // returns id if successful

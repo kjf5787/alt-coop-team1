@@ -5,6 +5,8 @@ class Student {
     private $email;
     private $preferredName;
     private $major;
+    private $section;
+    private $term;
 
     public function getId() {
         return $this->id;
@@ -32,5 +34,19 @@ class Student {
     }
     public function setMajor($major) {
         $this->major = $major;
+    }
+
+    public function getSection() {
+        return $this->section;
+    }
+    public function setSection($section) {
+        $this->section = $section;
+    }
+
+    public function getTerm() {
+        return $this->term;
+    }
+    public function setTerm($term) {
+        $this->term = $term;
     }
 }

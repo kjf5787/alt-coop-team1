@@ -17,6 +17,10 @@ class DB {
 
     }//constructor
 
+    public function getConnection(): PDO {
+        return $this->db;
+    }
+
     // closes the connection
     function close() {
         $db = null;

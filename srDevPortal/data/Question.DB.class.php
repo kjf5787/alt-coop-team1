@@ -28,7 +28,7 @@ class QuestionDB extends DB {
         return $data;
     }
 
-    // gets all questions
+    // gets all question objects
     // returns an array of Question objects ordered by type
     function getAllQuestions(){
 
@@ -41,6 +41,24 @@ class QuestionDB extends DB {
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_CLASS, "Question");
             $data = $stmt->fetchAll();
+
+        } catch(PDOException $pe) {
+            error_log($pe->getMessage());
+        }
+
+        return $data;
+    }
+
+    // gets all questions
+    function getQuestions() {
+        $query = "SELECT question FROM questions ORDER BY question_type";
+        $data = [];
+
+        try {
+
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
         } catch(PDOException $pe) {
             error_log($pe->getMessage());

@@ -67,17 +67,19 @@ class StudentAnswerDB extends DB {
     }
 
     // gets all student q and a's by class
-    function getAnswersByClass($section){
+    function getAnswersByClass($term, $section){
         $query = "SELECT s.id, q.question, sa.answer
             FROM student_answers AS sa
             JOIN students AS s ON sa.student_id = s.id
             JOIN questions AS q ON sa.question_id = q.id
-            WHERE s.section = :section;";
+            WHERE s.term = :term
+            AND s.section = :section;";
         $data = [];
 
         try {
             $stmt = $this->db->prepare($query);
             $stmt->execute([
+                ":term" => $term,
                 ":section" => $section
             ]);
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC); // returns array of rows
@@ -87,6 +89,32 @@ class StudentAnswerDB extends DB {
     
         return $data;
     }
+
+    /*
+    // gets all student answers for one question
+    function getAnswersByQuestion($question){
+        $query = "SELECT s.id, sa.answer
+            FROM student_answers AS sa
+            JOIN students AS s ON sa.student_id = s.id
+            JOIN questions AS q ON sa.question_id = q.id
+            WHERE s.term = :term
+            AND s.section = :section;";
+        $data = [];
+
+        try {
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([
+                ":term" => $term,
+                ":section" => $section
+            ]);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC); // returns array of rows
+        } catch (PDOException $pe) {
+            error_log($pe->getMessage());
+        }
+    
+        return $data;
+    }
+        */
 
     // gets all answers for a specific question
     // returns an array of answers

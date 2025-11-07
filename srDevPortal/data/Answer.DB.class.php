@@ -28,6 +28,28 @@ class AnswerDB extends DB {
         return $data;
     }
 
+    // gets list of only answers for a question by its id
+    // returns array 
+    function getAnswerListByQuestionId($id) {
+
+        $query = "SELECT answer FROM answers WHERE question_id = :id";
+        $data = [];
+
+        try {
+
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([
+                ":id" => $id
+            ]);
+            $data = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+        } catch(PDOException $pe) {
+            error_log($pe->getMessage());
+        }
+
+        return $data;
+    }
+
     // inserts an answer
     // returns last insert id if successful
     function insertAnswer($questionId, $answer) {
