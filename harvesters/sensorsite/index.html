@@ -13,22 +13,20 @@
 
     var socket = io();
     socket.on('data', function(data) {
-        const dataSplit = data.split(" ")
-        var intReading = Number(dataSplit[2])
+        var intReading = Number(data)
         var readingsList = document.getElementById("readings");
         var timestamp = new Date().toUTCString();
         var entry = document.createElement('li');
-        entry.textContent = data + " on:   " + timestamp;
+        entry.textContent = data + "% moisture on:   " + timestamp;
         readingsList.appendChild(entry);
         if(lowCount>3){
           alert("Reading below minimum moisture preference");
+          lowCount = 0;
         }
         if(intReading<MoisturePref){
           lowCount++;
-        }
-        else{
-          lowcount = 0;
-        }
+        }        
+
     });
     </script>
   </head>
