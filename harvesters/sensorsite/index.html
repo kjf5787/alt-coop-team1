@@ -3,6 +3,7 @@
   <head>
 
     <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
     <script>
 
       const AirValue = 54;     // Min moisture value (calibrated via open air sensor reading)
@@ -15,10 +16,10 @@
     socket.on('data', function(data) {
         var intReading = Number(data)
         var readingsList = document.getElementById("readings");
-        var timestamp = new Date().toUTCString();
+        var timestamp = dayjs().format('hh:mm:ss A')
         var entry = document.createElement('li');
-        entry.textContent = data + "% moisture on:   " + timestamp;
-        readingsList.appendChild(entry);
+        entry.textContent = data + "% moisture at:   " + timestamp;
+        readingsList.prepend(entry);
         if(lowCount>3){
           alert("Reading below minimum moisture preference");
           lowCount = 0;
