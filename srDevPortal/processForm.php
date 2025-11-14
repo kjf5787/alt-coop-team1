@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $preferredName = validateStr($preferredName, 50); // max 50 chars
         $major = validateStr($major, 10); // max 10 chars
         $section = validateStr($section, 10); // max 10 chars
-        $term = validateStr($section, 50); // max 50 chars
+        $term = validateStr($term, 50); // max 50 chars
 
         if ($studentId === false || $preferredName === false || $major === false || $section === false || $term === false) {
             // todo more user friendly response
