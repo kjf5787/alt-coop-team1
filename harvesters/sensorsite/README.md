@@ -12,6 +12,5 @@
 
 ## To-do
 - Make it look good
-- Cleaner timestamps
 - External alerts when moisture level drops too low
 - Get constants from Arduino
