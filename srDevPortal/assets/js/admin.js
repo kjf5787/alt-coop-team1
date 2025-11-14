@@ -10,23 +10,57 @@ filters.forEach(filter => {
     const optionItems = [...optionsContainer.querySelectorAll('.filter-option')];
 
     // toggle dropdown when clicking the filter
+    /*
     item.addEventListener('click', (e) => {
         e.stopPropagation();
         filter.classList.toggle('active');
         if (filter.classList.contains('active')) searchInput.focus();
     });
+    */
+    item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        filter.classList.toggle('active');
+        if (searchInput && filter.classList.contains('active')) {
+            searchInput.focus();
+        }
+    });
 
     // filter options
+    /*
     searchInput.addEventListener('input', () => {
         const filterText = searchInput.value.toLowerCase();
         optionItems.forEach(option => {
             option.style.display = option.textContent.toLowerCase().includes(filterText) ? '' : 'none';
         });
     });
+    */
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            const filterText = searchInput.value.toLowerCase();
+            optionItems.forEach(option => {
+                option.style.display = option.textContent.toLowerCase().includes(filterText) ? '' : 'none';
+            });
+        });
+    }
 
     // toggle options
+    /*
     optionItems.forEach(option => {
         option.addEventListener('click', () => {
+            option.classList.toggle('selected');
+        });
+    });
+    */
+    optionItems.forEach(option => {
+        option.addEventListener('click', () => {
+            const isSort = filter.querySelector('.filter-item').textContent.trim() === 'Sort';
+    
+            if (isSort) {
+                // only one sort allowed → clear previous
+                filter.querySelectorAll('.filter-option.selected')
+                      .forEach(opt => opt.classList.remove('selected'));
+            }
+    
             option.classList.toggle('selected');
         });
     });
@@ -50,6 +84,7 @@ function fetchTable(filters = {}) {
 }
 
 // applies filters
+/*
 applyButton.addEventListener('click', () => {
     const selectedFilters = {};
 
@@ -59,6 +94,27 @@ applyButton.addEventListener('click', () => {
             .map(opt => opt.dataset.value);
         if (selectedOptions.length) selectedFilters[filterName] = selectedOptions;
     });
+
+    fetchTable(selectedFilters);
+});
+*/
+applyButton.addEventListener('click', () => {
+    const selectedFilters = {};
+    let sortValue = null;
+
+    filters.forEach(filter => {
+        const filterName = filter.querySelector('.filter-item').textContent.trim();
+        const selectedOptions = [...filter.querySelectorAll('.filter-option.selected')]
+            .map(opt => opt.dataset.value);
+
+        if (filterName === 'Sort') {
+            if (selectedOptions.length === 1) sortValue = selectedOptions[0];
+        } else if (selectedOptions.length) {
+            selectedFilters[filterName] = selectedOptions;
+        }
+    });
+
+    if (sortValue) selectedFilters['Sort'] = sortValue;
 
     fetchTable(selectedFilters);
 });
