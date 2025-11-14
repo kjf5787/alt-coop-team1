@@ -20,8 +20,12 @@
     $terms = $answerDB->getAnswerListByQuestionId(52);
     $sections = $answerDB->getAnswerListByQuestionId(4);
     $majors = $answerDB->getAnswerListByQuestionId(3);
-    $questions = $questionDB->getQuestions();
+    //$questions = $questionDB->getAllRangeQuestions();
     $students = $studentDB->getAllStudentIds();
+
+    $personalityQuestions = $questionDB->getQuestionsByQuestionType('personality');
+    $technicalQuestions = $questionDB->getQuestionsByQuestionType('technical');
+    $questions = array_merge($personalityQuestions, $technicalQuestions);
 
 ?>
 
@@ -77,8 +81,8 @@
                     <div class="filter-options">
                         <input type="text" class="filter-search" placeholder="Type to filter...">
                         <?php foreach ($questions as $item): ?>
-                            <div class="filter-option" data-value="<?= htmlspecialchars($item) ?>">
-                                <?= ucfirst(htmlspecialchars($item)) ?>
+                            <div class="filter-option" data-value="<?= htmlspecialchars($item->getQuestion()) ?>">
+                                <?= ucfirst(htmlspecialchars($item->getQuestion())) ?>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -93,6 +97,17 @@
                                 <?= ucfirst(htmlspecialchars($item)) ?>
                             </div>
                         <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <div class="filter">
+                    <div class="filter-item">Sort</div>
+                    <div class="filter-options">
+                        <div class="filter-option" data-value="Term">Term</div>
+                        <div class="filter-option" data-value="Section">Section</div>
+                        <div class="filter-option" data-value="Major">Major</div>
+                        <div class="filter-option" data-value="Question">Question</div>
+                        <div class="filter-option" data-value="Student">Student</div>
                     </div>
                 </div>
 
