@@ -13,8 +13,9 @@ class QueryBuilder {
     public function getFilteredData(array $filters, PDO $pdo) {
         $where = [];
         $params = [];
-
-        // build WHERE conditions
+        $orderBy = "s.id"; // default fallback
+    
+        // WHERE filters
         foreach ($this->filterMap as $key => $column) {
             if (!empty($filters[$key])) {
                 $placeholders = implode(',', array_fill(0, count($filters[$key]), '?'));
@@ -22,24 +23,38 @@ class QueryBuilder {
                 $params = array_merge($params, $filters[$key]);
             }
         }
-
+    
+        // SORTING
+        if (!empty($filters['Sort'])) {
+            $sortKey = $filters['Sort'];
+            if (isset($this->filterMap[$sortKey])) {
+                $orderBy = $this->filterMap[$sortKey];
+            }
+        }
+    
         $sql = "
             SELECT 
                 s.id AS student_id,
-                q.question AS question,
-                sa.answer AS answer
+                s.preferredName AS name,
+                s.major,
+                s.section,
+                s.term,
+                q.question AS Question,
+                sa.answer AS Answer
             FROM student_answers AS sa
             JOIN students AS s ON sa.student_id = s.id
             JOIN questions AS q ON sa.question_id = q.id
         ";
-
-        // add filters
+    
         if ($where) {
             $sql .= " WHERE " . implode(' AND ', $where);
         }
-
+    
+        $sql .= " ORDER BY $orderBy, s.id, q.id";
+    
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 }
