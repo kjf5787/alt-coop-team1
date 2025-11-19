@@ -3,20 +3,13 @@ const applyButton = document.getElementById('apply-filters');
 const clearButton = document.getElementById('clear-filters');
 const tableDiv = document.querySelector('.table-div');
 
+// filter dropdown behavior
 filters.forEach(filter => {
     const item = filter.querySelector('.filter-item');
     const optionsContainer = filter.querySelector('.filter-options');
     const searchInput = filter.querySelector('.filter-search');
     const optionItems = [...optionsContainer.querySelectorAll('.filter-option')];
 
-    // toggle dropdown when clicking the filter
-    /*
-    item.addEventListener('click', (e) => {
-        e.stopPropagation();
-        filter.classList.toggle('active');
-        if (filter.classList.contains('active')) searchInput.focus();
-    });
-    */
     item.addEventListener('click', (e) => {
         e.stopPropagation();
         filter.classList.toggle('active');
@@ -25,15 +18,6 @@ filters.forEach(filter => {
         }
     });
 
-    // filter options
-    /*
-    searchInput.addEventListener('input', () => {
-        const filterText = searchInput.value.toLowerCase();
-        optionItems.forEach(option => {
-            option.style.display = option.textContent.toLowerCase().includes(filterText) ? '' : 'none';
-        });
-    });
-    */
     if (searchInput) {
         searchInput.addEventListener('input', () => {
             const filterText = searchInput.value.toLowerCase();
@@ -43,61 +27,45 @@ filters.forEach(filter => {
         });
     }
 
-    // toggle options
-    /*
     optionItems.forEach(option => {
         option.addEventListener('click', () => {
-            option.classList.toggle('selected');
-        });
-    });
-    */
-    optionItems.forEach(option => {
-        option.addEventListener('click', () => {
-            const isSort = filter.querySelector('.filter-item').textContent.trim() === 'Sort';
-    
+            const isSort = item.textContent.trim() === 'Sort';
             if (isSort) {
-                // only one sort allowed → clear previous
-                filter.querySelectorAll('.filter-option.selected')
-                      .forEach(opt => opt.classList.remove('selected'));
+                filter.querySelectorAll('.filter-option.selected').forEach(opt => opt.classList.remove('selected'));
             }
-    
             option.classList.toggle('selected');
         });
     });
 });
 
-// fetches populated table
-function fetchTable(filters = {}) {
-    tableDiv.textContent = 'Loading...';
+// Fetch table data
+function fetchTable(filtersObj = {}) {
+    tableDiv.innerHTML = ''; // clear
+
+    // create spinner
+    const spinner = document.createElement('div');
+    spinner.className = 'table-spinner';
+    spinner.innerHTML = '<div></div>'; // inner div for spinner
+    tableDiv.appendChild(spinner);
 
     fetch('api/get_student_answers.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(filters)
+        body: JSON.stringify(filtersObj)
     })
     .then(res => res.json())
-    .then(data => populateTable(data))
+    .then(data => {
+        // only rowSpan student cards if not sorted by question
+        const useRowSpan = !filtersObj['Sort'] || filtersObj['Sort'] !== 'Question';
+        populateTable(data, useRowSpan);
+    })
     .catch(err => {
         console.error(err);
         tableDiv.textContent = 'Error loading data';
     });
 }
 
-// applies filters
-/*
-applyButton.addEventListener('click', () => {
-    const selectedFilters = {};
-
-    filters.forEach(filter => {
-        const filterName = filter.querySelector('.filter-item').textContent.trim();
-        const selectedOptions = [...filter.querySelectorAll('.filter-option.selected')]
-            .map(opt => opt.dataset.value);
-        if (selectedOptions.length) selectedFilters[filterName] = selectedOptions;
-    });
-
-    fetchTable(selectedFilters);
-});
-*/
+// apply filters
 applyButton.addEventListener('click', () => {
     const selectedFilters = {};
     let sortValue = null;
@@ -119,19 +87,24 @@ applyButton.addEventListener('click', () => {
     fetchTable(selectedFilters);
 });
 
-// clears filters
+// clear filters and apply automatically
 clearButton.addEventListener('click', () => {
     filters.forEach(filter => {
-        filter.querySelectorAll('.filter-option.selected').forEach(opt => opt.classList.remove('selected'));
-        filter.querySelector('.filter-search').value = '';
+        // remove selected options
+        filter.querySelectorAll('.filter-option.selected')
+              .forEach(opt => opt.classList.remove('selected'));
+        // clear search inputs
+        const searchInput = filter.querySelector('.filter-search');
+        if (searchInput) searchInput.value = '';
+        // show all options
         filter.querySelectorAll('.filter-option').forEach(opt => opt.style.display = '');
     });
 
-    fetchTable(); // no filters
+    // fetch table with no filters or sort applied
+    fetchTable({});
 });
 
-// populates the table with student answers
-function populateTable(data) {
+function populateTable(data, useRowSpan = true) {
     tableDiv.textContent = '';
 
     if (!data.length) {
@@ -140,57 +113,61 @@ function populateTable(data) {
     }
 
     const table = document.createElement('table');
-    table.style.width = '100%';
-    table.style.borderCollapse = 'collapse';
 
-    // header row
-    const header = table.insertRow();
-    Object.keys(data[0]).forEach(key => {
+    const hiddenStudentFields = ['name', 'major', 'section', 'term'];
+    const keys = Object.keys(data[0]).filter(key => !hiddenStudentFields.includes(key));
+
+    // header
+    const thead = document.createElement('thead');
+    const headerRow = thead.insertRow();
+    keys.forEach(key => {
         const th = document.createElement('th');
-        th.textContent = key;
-        th.style.border = '1px solid #ccc';
-        th.style.padding = '6px';
-        header.appendChild(th);
+        th.textContent = key === 'student_id' ? 'Student' : key;
+        headerRow.appendChild(th);
     });
+    table.appendChild(thead);
 
-    // data rows
+    // body
+    const tbody = document.createElement('tbody');
     let lastId = null;
 
     data.forEach((row, rowIndex) => {
-        const tr = table.insertRow();
-        const values = Object.values(row);
+        const tr = tbody.insertRow();
 
-        const nextRow = data[rowIndex + 1];
-        const isLastRowForId = !nextRow || nextRow[Object.keys(nextRow)[0]] !== row[Object.keys(row)[0]];
-
-        values.forEach((value, colIndex) => {
+        keys.forEach(key => {
             const td = tr.insertCell();
-            td.style.borderLeft = '1px solid #ccc';
-            td.style.borderRight = '1px solid #ccc';
             td.style.padding = '6px';
+            td.style.verticalAlign = 'top';
 
-            if (colIndex === 0) {
-                if (value !== lastId) {
-                    td.textContent = value;
-                    td.style.borderTop = '1px solid #ccc';
-                } else {
-                    td.textContent = '';
-                    td.style.borderTop = '0';
+            if (key === 'student_id') {
+                const card = document.createElement('div');
+                card.classList.add('student-card');
+                card.innerHTML = `
+                    <div class="student-id">${row.student_id}</div>
+                    <div class="student-line"><strong>Name: </strong>${row.name}</div>
+                    <div class="student-line"><strong>Major: </strong>${row.major}</div>
+                    <div class="student-line"><strong>Section: </strong>${row.section}</div>
+                    <div class="student-line"><strong>Term: </strong>${row.term}</div>
+                `;
+                td.appendChild(card);
+
+                if (useRowSpan && row.student_id !== lastId) {
+                    const nextRows = data.slice(rowIndex).filter(r => r.student_id === row.student_id);
+                    td.rowSpan = nextRows.length;
+                } else if (useRowSpan && row.student_id === lastId) {
+                    td.style.display = 'none';
                 }
-                td.style.borderBottom = isLastRowForId ? '1px solid #ccc' : '0';
-                lastId = value !== lastId ? value : lastId;
             } else {
-                td.textContent = value;
-                td.style.borderTop = '1px solid #ccc';
-                td.style.borderBottom = isLastRowForId ? '1px solid #ccc' : '0';
+                td.textContent = row[key];
             }
-
-            tr.appendChild(td);
         });
+
+        lastId = row.student_id;
     });
 
+    table.appendChild(tbody);
     tableDiv.appendChild(table);
 }
 
-// show table on load
+// initial table load
 fetchTable();
