@@ -13,9 +13,9 @@ class QueryBuilder {
     public function getFilteredData(array $filters, PDO $pdo) {
         $where = [];
         $params = [];
-        $orderBy = "s.id"; // default fallback
+        $orderBy = "s.id"; // default
     
-        // WHERE filters
+        // filters
         foreach ($this->filterMap as $key => $column) {
             if (!empty($filters[$key])) {
                 $placeholders = implode(',', array_fill(0, count($filters[$key]), '?'));
@@ -24,7 +24,7 @@ class QueryBuilder {
             }
         }
     
-        // SORTING
+        // sort
         if (!empty($filters['Sort'])) {
             $sortKey = $filters['Sort'];
             if (isset($this->filterMap[$sortKey])) {
