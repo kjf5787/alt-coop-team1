@@ -45,6 +45,12 @@ header{
 }
 
 /*--- End Title CSS ---*/
+/*--- Welcome CSS ---*/
+.welcome-container{
+    width: 50%;
+    margin: auto;
+}
+/*--- End Welcome CSS ---*/
 /*--- Questions CSS ---*/
 
 .question-container{
