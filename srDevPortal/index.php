@@ -78,53 +78,53 @@ if (empty($_SESSION['logged_in'])) {
                 </p>
                 <!-- populate questions and answers from db -->
                 <?php foreach ($informationalQuestions as $q): ?>
-    <div class="questionAnswerBox">
-        <div class="questions informationalQuestions">
-            <label for="<?= $q->getId() ?>"><?= htmlspecialchars($q->getQuestion()) ?></label>
-        </div>
-
-        <?php if (strtolower(trim($q->getInputType())) === 'select'): ?>
-            <?php $answers = $answerDB->getAnswersByQuestionId($q->getId()); ?>
-
-            <div class="answers informationalAnswers">
-                <div class="dropdown">
-                    <div class="dropdown-selected">
-                        <?= isset($studentInfoMap[$q->getName()]) ? htmlspecialchars($studentInfoMap[$q->getName()]) : "Select..." ?>
+                <div class="questionAnswerBox">
+                    <div class="questions informationalQuestions">
+                        <label for="<?= $q->getId() ?>"><?= htmlspecialchars($q->getQuestion()) ?></label>
                     </div>
 
-                    <div class="dropdown-options">
-                        <?php foreach ($answers as $a): ?>
-                            <div 
-                                data-value="<?= htmlspecialchars($a->getAnswer()) ?>"
-                                <?= (isset($studentInfoMap[$q->getName()]) && $studentInfoMap[$q->getName()] === $a->getAnswer()) ? 'class="selected"' : '' ?>
-                            >
-                                <?= htmlspecialchars($a->getAnswer()) ?>
+                    <?php if (strtolower(trim($q->getInputType())) === 'select'): ?>
+                        <?php $answers = $answerDB->getAnswersByQuestionId($q->getId()); ?>
+
+                        <div class="answers informationalAnswers">
+                            <div class="dropdown">
+                                <div class="dropdown-selected">
+                                    <?= isset($studentInfoMap[$q->getName()]) ? htmlspecialchars($studentInfoMap[$q->getName()]) : "Select..." ?>
+                                </div>
+
+                                <div class="dropdown-options">
+                                    <?php foreach ($answers as $a): ?>
+                                        <div 
+                                            data-value="<?= htmlspecialchars($a->getAnswer()) ?>"
+                                            <?= (isset($studentInfoMap[$q->getName()]) && $studentInfoMap[$q->getName()] === $a->getAnswer()) ? 'class="selected"' : '' ?>
+                                        >
+                                            <?= htmlspecialchars($a->getAnswer()) ?>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
-                        <?php endforeach; ?>
-                    </div>
+
+                            <input 
+                                type="hidden" 
+                                name="<?= $q->getName() ?>" 
+                                class="dropdown-hidden"
+                                value="<?= isset($studentInfoMap[$q->getName()]) ? htmlspecialchars($studentInfoMap[$q->getName()]) : '' ?>"
+                            >
+                        </div>
+
+                    <?php else: ?>
+                        <div class="answers informationalAnswers">
+                            <input 
+                                type="text" 
+                                name="<?= $q->getName() ?>" 
+                                id="<?= $q->getId() ?>"
+                                value="<?= isset($studentInfoMap[$q->getName()]) ? htmlspecialchars($studentInfoMap[$q->getName()]) : '' ?>"
+                                placeholder="Your answer"
+                            />
+                        </div>
+                    <?php endif; ?>
                 </div>
-
-                <input 
-                    type="hidden" 
-                    name="<?= $q->getName() ?>" 
-                    class="dropdown-hidden"
-                    value="<?= isset($studentInfoMap[$q->getName()]) ? htmlspecialchars($studentInfoMap[$q->getName()]) : '' ?>"
-                >
-            </div>
-
-        <?php else: ?>
-            <div class="answers informationalAnswers">
-                <input 
-                    type="text" 
-                    name="<?= $q->getName() ?>" 
-                    id="<?= $q->getId() ?>"
-                    value="<?= isset($studentInfoMap[$q->getName()]) ? htmlspecialchars($studentInfoMap[$q->getName()]) : '' ?>"
-                    placeholder="Your answer"
-                />
-            </div>
-        <?php endif; ?>
-    </div>
-<?php endforeach; ?>
+            <?php endforeach; ?>
             </div>
             <div class="q-box">
                 <p class="q-section-title">
