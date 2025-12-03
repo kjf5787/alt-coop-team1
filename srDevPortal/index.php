@@ -1,4 +1,25 @@
 <?php
+ini_set('session.gc_maxlifetime', 3600);
+session_set_cookie_params(3600);
+session_start();
+
+// rolling 60-minute expiration, resets every time user interacts with page
+if (!isset($_SESSION['LAST_ACTIVITY'])) {
+    $_SESSION['LAST_ACTIVITY'] = time();
+} else if (time() - $_SESSION['LAST_ACTIVITY'] > 3600) {
+    session_unset();
+    session_destroy();
+    header("Location: login.php?expired=1");
+    exit;
+}
+
+$_SESSION['LAST_ACTIVITY'] = time(); // update timestamp
+
+if (empty($_SESSION['logged_in'])) {
+    header("Location: login.php");
+    exit;
+}
+
     $page = "";
     $group = "home";
     $path = "";
@@ -21,11 +42,34 @@
     $informationalQuestions = $questionDB->getQuestionsByQuestionType('informational');
     $personalityQuestions = $questionDB->getQuestionsByQuestionType('personality');
     $technicalQuestions = $questionDB->getQuestionsByQuestionType('technical');
+
+    // load previous answers if exists
+    $studentDB = new StudentDB();
+    $studentAnswerDB = new StudentAnswerDB();
+    // get student data
+    $student = $studentDB->getStudentById($_SESSION['id']);
+    $studentInfoMap = [
+        "id" => $student->getId(),
+        "preferredName" => $student->getPreferredName(),
+        "major"         => $student->getMajor(),
+        "section"       => $student->getSection(),
+        "term"          => $student->getTerm(),
+        "email"         => $student->getEmail()
+    ];
+    // get answers
+    $previousAnswers = $studentAnswerDB->getStudentAnswers($_SESSION['id']);
+    $mappedAnswers = [];
+    foreach ($previousAnswers as $a) {
+        $mappedAnswers[$a->getQuestionId()] = $a->getAnswer();
+    }
 ?>
 
         <section class="title-container">
             <h1 id="title">Senior Development</h1>
             <h3 id="subtitle">Self-Assessment</h3>
+        </section>
+        <section class="welcome-container">
+            <p>Welcome, <?= htmlspecialchars($_SESSION['email']); ?></p>
         </section>
         <form class="question-container" action="processForm.php" method="post">
             <div class="q-box">
@@ -34,37 +78,53 @@
                 </p>
                 <!-- populate questions and answers from db -->
                 <?php foreach ($informationalQuestions as $q): ?>
-                    <div class="questionAnswerBox">
-                        <div class="questions informationalQuestions">
-                            <label for="<?= $q->getId() ?>"><?= htmlspecialchars($q->getQuestion()) ?></label>
-                        </div>
+    <div class="questionAnswerBox">
+        <div class="questions informationalQuestions">
+            <label for="<?= $q->getId() ?>"><?= htmlspecialchars($q->getQuestion()) ?></label>
+        </div>
 
-                        <?php if (strtolower(trim($q->getInputType())) === 'select'): ?>
-                            <?php
-                            $answers = $answerDB->getAnswersByQuestionId($q->getId());
-                            ?>
-                            <div class="answers informationalAnswers">
-                                <div class="dropdown">
-                                    <div class="dropdown-selected">Select...</div>
-                                    <div class="dropdown-options">
-                                        <?php foreach ($answers as $a): ?>
-                                            <div data-value="<?= htmlspecialchars($a->getAnswer()) ?>">
-                                                <?= htmlspecialchars($a->getAnswer()) ?>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                                <!-- hidden input to store dropdown value -->
-                                <input type="hidden" name="<?= $q->getName() ?>" class="dropdown-hidden">
-                            </div>
+        <?php if (strtolower(trim($q->getInputType())) === 'select'): ?>
+            <?php $answers = $answerDB->getAnswersByQuestionId($q->getId()); ?>
 
-                        <?php else: ?>
-                            <div class="answers informationalAnswers">
-                                <input type="text" name="<?= $q->getName() ?>" id="<?= $q->getId() ?>" placeholder="Your answer" />
-                            </div>
-                        <?php endif; ?>
+            <div class="answers informationalAnswers">
+                <div class="dropdown">
+                    <div class="dropdown-selected">
+                        <?= isset($studentInfoMap[$q->getName()]) ? htmlspecialchars($studentInfoMap[$q->getName()]) : "Select..." ?>
                     </div>
-                <?php endforeach; ?>
+
+                    <div class="dropdown-options">
+                        <?php foreach ($answers as $a): ?>
+                            <div 
+                                data-value="<?= htmlspecialchars($a->getAnswer()) ?>"
+                                <?= (isset($studentInfoMap[$q->getName()]) && $studentInfoMap[$q->getName()] === $a->getAnswer()) ? 'class="selected"' : '' ?>
+                            >
+                                <?= htmlspecialchars($a->getAnswer()) ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <input 
+                    type="hidden" 
+                    name="<?= $q->getName() ?>" 
+                    class="dropdown-hidden"
+                    value="<?= isset($studentInfoMap[$q->getName()]) ? htmlspecialchars($studentInfoMap[$q->getName()]) : '' ?>"
+                >
+            </div>
+
+        <?php else: ?>
+            <div class="answers informationalAnswers">
+                <input 
+                    type="text" 
+                    name="<?= $q->getName() ?>" 
+                    id="<?= $q->getId() ?>"
+                    value="<?= isset($studentInfoMap[$q->getName()]) ? htmlspecialchars($studentInfoMap[$q->getName()]) : '' ?>"
+                    placeholder="Your answer"
+                />
+            </div>
+        <?php endif; ?>
+    </div>
+<?php endforeach; ?>
             </div>
             <div class="q-box">
                 <p class="q-section-title">
@@ -80,7 +140,15 @@
 
                         <div class="answers personalityAnswers rangeSlider">
                             <p>Strongly Disagree</p>
-                            <input type="range" id="<?= $q->getId() ?>" name="<?= $q->getId() ?>" min="1" max="5" step="1" value="3" class="inputSlider">
+                            <input 
+                                type="range" 
+                                id="<?= $q->getId() ?>" name="<?= $q->getId() ?>" 
+                                min="1" 
+                                max="5" 
+                                step="1" 
+                                value="<?= isset($mappedAnswers[$q->getId()]) ? $mappedAnswers[$q->getId()] : 3 ?>"
+                                class="inputSlider"
+                            >
                             <p>Strongly Agree</p>
                         </div>
                     </div>
@@ -100,7 +168,16 @@
 
                         <div class="answers technicalAnswers rangeSlider">
                             <p>Not At All</p>
-                            <input type="range" id="<?= $q->getId() ?>" name="<?= $q->getId() ?>" min="1" max="5" step="1" value="3" class="inputSlider">
+                            <input 
+                                type="range" 
+                                id="<?= $q->getId() ?>" 
+                                name="<?= $q->getId() ?>" 
+                                min="1" 
+                                max="5" 
+                                step="1" 
+                                value="<?= isset($mappedAnswers[$q->getId()]) ? $mappedAnswers[$q->getId()] : 3 ?>" 
+                                class="inputSlider"
+                            >
                             <p>Extremely</p>
                         </div>
                     </div>
