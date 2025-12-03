@@ -11,7 +11,7 @@
                 <h1>Login</h1>
                 <form class="login-form" id="loginForm">
                     <div class="login-box">
-                        <input type="text" id="ritEmail" name="ritEmail" placeholder="Your RIT email"/>
+                        <input type="email" id="ritEmail" name="ritEmail" placeholder="Your RIT email" required/>
                     </div>
 
                     <div class="submit-box" id="login-s-box">
@@ -46,7 +46,7 @@
                 sendOtpBtn.disabled = true;
                 sendOtpBtn.textContent = 'Sending...';
 
-                const response = await fetch('send-otp.php', {
+                const response = await fetch('data/send-otp.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email })
@@ -68,27 +68,27 @@
 
             verifyOtpBtn.addEventListener('click', async () => {
                 const otp = document.getElementById('otpCode').value;
+                const email = document.getElementById('ritEmail').value;
 
                 if (!otp) {
                     messageDiv.textContent = 'Please enter OTP';
                     return;
                 }
 
-                const response = await fetch('verify-otp.php', {
+                const response = await fetch('data/verify-otp.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ otp })
+                    body: JSON.stringify({ otp, email })
                 });
 
                 const result = await response.json();
-
+ 
                 if (result.success) {
-                    window.location.href = index.php;
+                    window.location.href = result.redirect;
                 } else {
                     messageDiv.textContent = result.message;
                 }
             });
         </script>
-
     </body>
 </html>
