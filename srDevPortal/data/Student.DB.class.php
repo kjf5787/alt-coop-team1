@@ -89,7 +89,23 @@ class StudentDB extends DB {
     }
 
     // updates a student
-    function updateStudent() {
-        // TODO
+    function updateStudent($id, $email, $preferredName, $major, $section, $term) {
+        $query = "UPDATE students SET email = :email, preferredName = :preferredName, major = :major, section = :section, term = :term WHERE id = :id";
+    
+        try {
+            $stmt = $this->db->prepare($query);
+            return $stmt->execute([
+                ':email' => $email,
+                ':preferredName' => $preferredName,
+                ':major' => $major,
+                ':section' => $section,
+                ':term' => $term,
+                ':id' => $id
+            ]);
+        } catch (PDOException $pe) {
+            error_log($pe->getMessage());
+            return false;
+        }
     }
+    
 }
