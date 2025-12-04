@@ -1,4 +1,7 @@
 <?php
+ini_set('session.gc_maxlifetime', 3600);
+session_set_cookie_params(3600);
+session_start();
 
 require_once __DIR__ . '/utils/validator.php';
 require_once __DIR__ . '/data/Student.DB.class.php';
@@ -6,8 +9,6 @@ require_once __DIR__ . '/data/StudentAnswer.DB.class.php';
 
 $studentDB = new StudentDB();
 $studentAnswerDB = new StudentAnswerDB();
-
-$emailDomain = "@rit.edu";
 
 // Check if the form was submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -33,21 +34,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $section = validateStr($section, 10); // max 10 chars
         $term = validateStr($term, 50); // max 50 chars
 
+        // check if fields are valid, if not send to error page
         if ($studentId === false || $preferredName === false || $major === false || $section === false || $term === false) {
             // todo more user friendly response
             echo "Error: One or more fields are invalid.";
             exit;
         }
-        
-        // send to submissionError.php if student already submitted form
-        $student = $studentDB->getStudentById($studentId);
-        if($student){
-            // todo more user friendly response
-            echo "Error: Only one submission per student";
-            exit;
-        }
 
-        // get question answers from form
+        // get question answers from post
         $ignoredKeys = ['id', 'preferredName', 'major', 'section', 'term'];
         $studentAnswers = [];
         foreach ($_POST as $key => $value) {
@@ -67,21 +61,45 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $studentAnswers[$key] = $validValue;
         }
 
-        // insert student to db
-        $email = $studentId . $emailDomain;
-        $student = $studentDB->insertStudent($studentId, $email, $preferredName, $major, $section, $term);
-        if($student === false){
-            // todo more user friendly response
-            echo "Error: Could not insert student";
-            exit;
+        //$email = $studentId . $emailDomain;
+
+        // check if student already exists in db
+        $existingStudent = $studentDB->getStudentById($studentId);
+        if($existingStudent){
+            // update student if exists 
+            $updated = $studentDB->updateStudent($studentId, $_SESSION['email'], $preferredName, $major, $section, $term);
+            if($updated === false){
+                echo "Error: your response was not recorded.";
+                exit;
+            }
+        } else {
+            // insert student
+            $student = $studentDB->insertStudent($studentId, $_SESSION['email'], $preferredName, $major, $section, $term);
+            if($student === false){
+                // todo more user friendly response
+                echo "Error: Could not insert student";
+                exit;
+            }
         }
 
-        // insert answers to db
+        // check for any existing answers
+        $existingAnswers = $studentAnswerDB->getStudentAnswers($studentId);
+        $answerMap = [];
+        foreach ($existingAnswers as $ans) {
+            $answerMap[$ans->getQuestionId()] = $ans->getAnswer();
+        }
+
+        // insert or update answers in db
         foreach ($studentAnswers as $questionId => $answer) {
-            $answer = $studentAnswerDB->insertStudentAnswer($studentId, $questionId, $answer);
-            if($answer === false){
-                // todo more user friendly response
-                echo "Error: Could not insert question $key";
+            if (isset($answerMap[$questionId])) {
+                // update answer
+                $answer = $studentAnswerDB->updateStudentAnswer($studentId, $questionId, $answer);
+            } else {
+                // insert answer
+                $answer = $studentAnswerDB->insertStudentAnswer($studentId, $questionId, $answer);
+            }
+            if ($answer === false) {
+                echo "Error saving answer for question $questionId";
                 exit;
             }
         }
