@@ -1,4 +1,25 @@
 <?php
+ini_set('session.gc_maxlifetime', 3600);
+session_set_cookie_params(3600);
+session_start();
+
+// rolling 60-minute expiration, resets every time user interacts with page
+if (!isset($_SESSION['LAST_ACTIVITY'])) {
+    $_SESSION['LAST_ACTIVITY'] = time();
+} else if (time() - $_SESSION['LAST_ACTIVITY'] > 3600) {
+    session_unset();
+    session_destroy();
+    header("Location: login.php?expired=1");
+    exit;
+}
+
+$_SESSION['LAST_ACTIVITY'] = time(); // update timestamp
+
+if (empty($_SESSION['logged_in'])) {
+    header("Location: login.php");
+    exit;
+}
+
     $page = "";
     $group = "home";
     $path = "";
