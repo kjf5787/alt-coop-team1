@@ -1,23 +1,26 @@
+// DOM elements
 const filters = document.querySelectorAll('.filter');
 const applyButton = document.getElementById('apply-filters');
 const clearButton = document.getElementById('clear-filters');
 const tableDiv = document.querySelector('.table-div');
 
-// filter dropdown behavior
+/** FILTER DROPDOWN BEHAVIOR */ 
 filters.forEach(filter => {
     const item = filter.querySelector('.filter-item');
     const optionsContainer = filter.querySelector('.filter-options');
     const searchInput = filter.querySelector('.filter-search');
     const optionItems = [...optionsContainer.querySelectorAll('.filter-option')];
 
+    // toggle dropdown open/close when clicking the main filter item
     item.addEventListener('click', (e) => {
-        e.stopPropagation();
+        e.stopPropagation(); // prevent clicks from closing other dropdowns
         filter.classList.toggle('active');
         if (searchInput && filter.classList.contains('active')) {
             searchInput.focus();
         }
     });
 
+    // filter dropdown options as user types in the search input
     if (searchInput) {
         searchInput.addEventListener('input', () => {
             const filterText = searchInput.value.toLowerCase();
@@ -27,10 +30,12 @@ filters.forEach(filter => {
         });
     }
 
+    // handle option selection
     optionItems.forEach(option => {
         option.addEventListener('click', () => {
             const isSort = item.textContent.trim() === 'Sort';
             if (isSort) {
+                // if sorting, only one option can be selected at a time
                 filter.querySelectorAll('.filter-option.selected').forEach(opt => opt.classList.remove('selected'));
             }
             option.classList.toggle('selected');
@@ -38,16 +43,17 @@ filters.forEach(filter => {
     });
 });
 
-// Fetch table data
+/** FETCH TABLE DATA */
 function fetchTable(filtersObj = {}) {
-    tableDiv.innerHTML = ''; // clear
+    tableDiv.innerHTML = ''; // clear table
 
-    // create spinner
+    // create and display loading spinner
     const spinner = document.createElement('div');
     spinner.className = 'table-spinner';
     spinner.innerHTML = '<div></div>'; // inner div for spinner
     tableDiv.appendChild(spinner);
 
+    // send post request with filters to server
     fetch('api/get_student_answers.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -65,7 +71,7 @@ function fetchTable(filtersObj = {}) {
     });
 }
 
-// apply filters
+/** APPLY FILTERS */
 applyButton.addEventListener('click', () => {
     const selectedFilters = {};
     let sortValue = null;
@@ -76,7 +82,7 @@ applyButton.addEventListener('click', () => {
             .map(opt => opt.dataset.value);
 
         if (filterName === 'Sort') {
-            if (selectedOptions.length === 1) sortValue = selectedOptions[0];
+            if (selectedOptions.length === 1) sortValue = selectedOptions[0]; // only one sort allowed
         } else if (selectedOptions.length) {
             selectedFilters[filterName] = selectedOptions;
         }
@@ -87,23 +93,24 @@ applyButton.addEventListener('click', () => {
     fetchTable(selectedFilters);
 });
 
-// clear filters and apply automatically
+/** CLEAR FILTERS */
 clearButton.addEventListener('click', () => {
     filters.forEach(filter => {
         // remove selected options
         filter.querySelectorAll('.filter-option.selected')
-              .forEach(opt => opt.classList.remove('selected'));
+              .forEach(opt => opt.classList.remove('selected')); // deselect options
         // clear search inputs
         const searchInput = filter.querySelector('.filter-search');
-        if (searchInput) searchInput.value = '';
+        if (searchInput) searchInput.value = ''; // clear search input
         // show all options
-        filter.querySelectorAll('.filter-option').forEach(opt => opt.style.display = '');
+        filter.querySelectorAll('.filter-option').forEach(opt => opt.style.display = ''); 
     });
 
     // fetch table with no filters or sort applied
     fetchTable({});
 });
 
+/** RENDER TABLE */
 function populateTable(data, useRowSpan = true) {
     tableDiv.textContent = '';
 
@@ -117,7 +124,7 @@ function populateTable(data, useRowSpan = true) {
     const hiddenStudentFields = ['name', 'major', 'section', 'term'];
     const keys = Object.keys(data[0]).filter(key => !hiddenStudentFields.includes(key));
 
-    // header
+    // create table header
     const thead = document.createElement('thead');
     const headerRow = thead.insertRow();
     keys.forEach(key => {
@@ -127,9 +134,9 @@ function populateTable(data, useRowSpan = true) {
     });
     table.appendChild(thead);
 
-    // body
+    // create table body
     const tbody = document.createElement('tbody');
-    let lastId = null;
+    let lastId = null; // track last student_id for rowspan
 
     data.forEach((row, rowIndex) => {
         const tr = tbody.insertRow();
@@ -140,6 +147,7 @@ function populateTable(data, useRowSpan = true) {
             td.style.verticalAlign = 'top';
 
             if (key === 'student_id') {
+                // create a student card inside the cell
                 const card = document.createElement('div');
                 card.classList.add('student-card');
                 card.innerHTML = `
@@ -152,9 +160,11 @@ function populateTable(data, useRowSpan = true) {
                 td.appendChild(card);
 
                 if (useRowSpan && row.student_id !== lastId) {
+                    // apply rowspan to merge cells for the same student
                     const nextRows = data.slice(rowIndex).filter(r => r.student_id === row.student_id);
                     td.rowSpan = nextRows.length;
                 } else if (useRowSpan && row.student_id === lastId) {
+                    // hide duplicate cells
                     td.style.display = 'none';
                 }
             } else {
