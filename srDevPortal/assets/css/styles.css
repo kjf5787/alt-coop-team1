@@ -93,25 +93,6 @@ header{
     padding-bottom: 14px;
 }
 
-.answers input[type="text"], .login-box input[type="text"]{
-    border: none;
-    border-bottom: 1px solid #858585;
-    background-color: transparent;
-    padding: 4px 2px;
-    outline: none;
-    font-size: 90%;
-    width: 200px;
-}
-
-.answers input[type="text"]:focus, .login-box input[type="text"]:focus {
-    border-bottom-color: #DEA485;
-}
-
-.answers input[type="text"]::placeholder, .login-box input[type="text"]::placeholder {
-    color: #858585;
-    font-size: 90%;
-}
-
 .rangeSlider {
     text-align: center;
     display: flex;
@@ -239,6 +220,26 @@ header{
 }
 
 /*--- End Questions CSS ---*/
+/*--- Start Input CSS (question and login text and email inputs) ---*/
+.answers input[type="text"], .login-box input[type="text"], .login-box input[type="email"]{
+    border: none;
+    border-bottom: 1px solid #858585;
+    background-color: transparent;
+    padding: 4px 2px;
+    outline: none;
+    font-size: 90%;
+    width: 200px;
+}
+
+.answers input[type="text"]:focus, .login-box input[type="text"]:focus, .login-box input[type="email"]:focus {
+    border-bottom-color: #DEA485;
+}
+
+.answers input[type="text"]::placeholder, .login-box input[type="text"]::placeholder, .login-box input[type="email"]::placeholder {
+    color: #858585;
+    font-size: 90%;
+}
+/*--- End Input CSS---*/
 /*--- Login CSS ---*/
 .login-container{
     display: flex;
@@ -268,25 +269,22 @@ header{
     padding-bottom: 20px;
 }
 
-.login-box input[type="text"] {
+.login-box input[type="email"], .login-box input[type="text"] {
     width: 100%;
     padding: 5px;
+    font-size: 100%;
 }
 
 #login-s-box {
     text-align: center;
 }
 
-.login-box input[type="text"]{
-    font-size: 100%;
-}
-
-login-box input[type="text"]::placeholder {
+.login-box input[type="email"]::placeholder, .login-box input[type="text"]::placeholder {
     color: #858585;
     font-size: 100%;
 }
 /*--- End Login CSS ---*/
-         /*--- Start submit CSS ---*/
+/*--- Start submit CSS ---*/
 .submit-container {
     display: flex;
     flex-direction: column;
@@ -311,6 +309,21 @@ login-box input[type="text"]::placeholder {
     font-size: 1.2rem;
     color: #333;
 }
+.submit-box button {
+    width: 40%;
+    background-color: #DEA485;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px 0 20px 0;
+}
+.submit-box button:hover {
+    background-color: #CE8C69;
+}
+
  /*--- end submit CSS ---*/
   /*--- Start error CSS ---*/
 .error-container {
