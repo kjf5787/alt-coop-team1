@@ -6,6 +6,7 @@
 ## Usage
 
 - Change arduinoPort variable to the port your arduino is using
+- Put in valid sendgrid api key
 - Run app.js in node
 - Go to localhost:3000
 - Right now it just displays the output from the arduino.
