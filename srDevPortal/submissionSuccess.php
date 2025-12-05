@@ -8,7 +8,8 @@
 <section class="submit-container">
     <div class="s-box">
         <div class="submit-box">
-            <p>Form Submitted!</p>
+            <p>Your response has been recorded.</p>
+            <a href="index.php" class="back-btn">Back to Form</a>
         </div>
     </div>
 </section>

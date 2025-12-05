@@ -20,48 +20,53 @@ if (empty($_SESSION['logged_in'])) {
     exit;
 }
 
-    $page = "";
-    $group = "home";
-    $path = "";
-    $title = "Senior Development";
-    require_once ($path . "assets/inc/header.php");
-    require_once ($path . "data/Answer.class.php");
-    require_once ($path . "data/Answer.DB.class.php");
-    require_once ($path . "data/DB.class.php");
-    require_once ($path . "data/Question.class.php");
-    require_once ($path . "data/Question.DB.class.php");
-    require_once ($path . "data/Student.class.php");
-    require_once ($path . "data/Student.DB.class.php");
-    require_once ($path . "data/StudentAnswer.class.php");
-    require_once ($path . "data/StudentAnswer.DB.class.php");
+$page = "";
+$group = "home";
+$path = "";
+$title = "Senior Development";
 
-    // connect to db and pull questions and answers
-    $questionDB = new QuestionDB();
-    $answerDB = new AnswerDB();
+// includes
+require_once ($path . "assets/inc/header.php");
+require_once ($path . "data/Answer.class.php");
+require_once ($path . "data/Answer.DB.class.php");
+require_once ($path . "data/DB.class.php");
+require_once ($path . "data/Question.class.php");
+require_once ($path . "data/Question.DB.class.php");
+require_once ($path . "data/Student.class.php");
+require_once ($path . "data/Student.DB.class.php");
+require_once ($path . "data/StudentAnswer.class.php");
+require_once ($path . "data/StudentAnswer.DB.class.php");
 
-    $informationalQuestions = $questionDB->getQuestionsByQuestionType('informational');
-    $personalityQuestions = $questionDB->getQuestionsByQuestionType('personality');
-    $technicalQuestions = $questionDB->getQuestionsByQuestionType('technical');
+// connect to db
+$questionDB = new QuestionDB();
+$answerDB = new AnswerDB();
+$studentDB = new StudentDB();
+$studentAnswerDB = new StudentAnswerDB();
 
-    // load previous answers if exists
-    $studentDB = new StudentDB();
-    $studentAnswerDB = new StudentAnswerDB();
-    // get student data
-    $student = $studentDB->getStudentById($_SESSION['id']);
+// fetch questions and answers 
+$informationalQuestions = $questionDB->getQuestionsByQuestionType('informational');
+$personalityQuestions = $questionDB->getQuestionsByQuestionType('personality');
+$technicalQuestions = $questionDB->getQuestionsByQuestionType('technical');
+
+// load previous student data (empty if they don't exist)
+$student = $studentDB->getStudentById($_SESSION['id']);
+// check if exits before mapping data
+if($student !== false && $student !== null){
     $studentInfoMap = [
         "id" => $student->getId(),
         "preferredName" => $student->getPreferredName(),
-        "major"         => $student->getMajor(),
-        "section"       => $student->getSection(),
-        "term"          => $student->getTerm(),
-        "email"         => $student->getEmail()
+        "major" => $student->getMajor(),
+        "section" => $student->getSection(),
+        "term" => $student->getTerm(),
+        "email" => $student->getEmail()
     ];
-    // get answers
-    $previousAnswers = $studentAnswerDB->getStudentAnswers($_SESSION['id']);
-    $mappedAnswers = [];
-    foreach ($previousAnswers as $a) {
-        $mappedAnswers[$a->getQuestionId()] = $a->getAnswer();
-    }
+}
+// load previous answers (empty if they don't exist)
+$previousAnswers = $studentAnswerDB->getStudentAnswers($_SESSION['id']);
+$answerMap = [];
+foreach ($previousAnswers as $a) {
+    $answerMap[$a->getQuestionId()] = $a->getAnswer();
+}
 ?>
 
         <section class="title-container">
@@ -146,7 +151,7 @@ if (empty($_SESSION['logged_in'])) {
                                 min="1" 
                                 max="5" 
                                 step="1" 
-                                value="<?= isset($mappedAnswers[$q->getId()]) ? $mappedAnswers[$q->getId()] : 3 ?>"
+                                value="<?= isset($answerMap[$q->getId()]) ? $answerMap[$q->getId()] : 3 ?>"
                                 class="inputSlider"
                             >
                             <p>Strongly Agree</p>
@@ -175,7 +180,7 @@ if (empty($_SESSION['logged_in'])) {
                                 min="1" 
                                 max="5" 
                                 step="1" 
-                                value="<?= isset($mappedAnswers[$q->getId()]) ? $mappedAnswers[$q->getId()] : 3 ?>" 
+                                value="<?= isset($answerMap[$q->getId()]) ? $answerMap[$q->getId()] : 3 ?>" 
                                 class="inputSlider"
                             >
                             <p>Extremely</p>
@@ -191,6 +196,7 @@ if (empty($_SESSION['logged_in'])) {
     </body>
 
     <script>
+        // dropdown functionality 
         document.querySelectorAll('.dropdown').forEach(dropdown => {
             const selected = dropdown.querySelector('.dropdown-selected');
             const options = dropdown.querySelector('.dropdown-options');

@@ -10,6 +10,12 @@ require_once __DIR__ . '/data/StudentAnswer.DB.class.php';
 $studentDB = new StudentDB();
 $studentAnswerDB = new StudentAnswerDB();
 
+// function to redirect to submissionError.php 
+function errorRedirect($msg) {
+    header("Location: submissionError.php?msg=" . urlencode($msg));
+    exit;
+}
+
 // Check if the form was submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
@@ -36,9 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // check if fields are valid, if not send to error page
         if ($studentId === false || $preferredName === false || $major === false || $section === false || $term === false) {
-            // todo more user friendly response
-            echo "Error: One or more fields are invalid.";
-            exit;
+            errorRedirect("One or more fields are invalid.");
         }
 
         // get question answers from post
@@ -53,9 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $sanitizedValue = sanitize($value);
             $validValue = validateNum($sanitizedValue);
             if ($validValue === false || $validValue === null) {
-                // todo more user friendly response
-                echo "Error: Invalid answer for question $key";
-                exit;
+                errorRedirect("One or more answers are invalid.");
             }
 
             $studentAnswers[$key] = $validValue;
@@ -69,16 +71,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // update student if exists 
             $updated = $studentDB->updateStudent($studentId, $_SESSION['email'], $preferredName, $major, $section, $term);
             if($updated === false){
-                echo "Error: your response was not recorded.";
-                exit;
+                errorRedirect("");
             }
         } else {
             // insert student
             $student = $studentDB->insertStudent($studentId, $_SESSION['email'], $preferredName, $major, $section, $term);
             if($student === false){
-                // todo more user friendly response
-                echo "Error: Could not insert student";
-                exit;
+                errorRedirect("");
             }
         }
 
@@ -99,8 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $answer = $studentAnswerDB->insertStudentAnswer($studentId, $questionId, $answer);
             }
             if ($answer === false) {
-                echo "Error saving answer for question $questionId";
-                exit;
+                errorRedirect("");
             }
         }
 
