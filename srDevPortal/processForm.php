@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // check if fields are valid, if not send to error page
         if ($studentId === false || $preferredName === false || $major === false || $section === false || $term === false) {
-            errorRedirect("One or more fields are invalid.");
+            errorRedirect("1");
         }
 
         // get question answers from post
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $sanitizedValue = sanitize($value);
             $validValue = validateNum($sanitizedValue);
             if ($validValue === false || $validValue === null) {
-                errorRedirect("One or more answers are invalid.");
+                errorRedirect("2");
             }
 
             $studentAnswers[$key] = $validValue;
@@ -71,13 +71,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // update student if exists 
             $updated = $studentDB->updateStudent($studentId, $_SESSION['email'], $preferredName, $major, $section, $term);
             if($updated === false){
-                errorRedirect("");
+                errorRedirect("3");
             }
         } else {
             // insert student
             $student = $studentDB->insertStudent($studentId, $_SESSION['email'], $preferredName, $major, $section, $term);
             if($student === false){
-                errorRedirect("");
+                errorRedirect("4");
             }
         }
 
@@ -92,13 +92,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         foreach ($studentAnswers as $questionId => $answer) {
             if (isset($answerMap[$questionId])) {
                 // update answer
-                $answer = $studentAnswerDB->updateStudentAnswer($studentId, $questionId, $answer);
+                if ($answerMap[$questionId] != $answer) { // if answer is different, update
+                    $answer = $studentAnswerDB->updateStudentAnswer($studentId, $questionId, $answer);
+                    if ($answer === false) {
+                        errorRedirect("5");
+                    }
+                } // if answer is the same as in db, do nothing
             } else {
                 // insert answer
                 $answer = $studentAnswerDB->insertStudentAnswer($studentId, $questionId, $answer);
             }
-            if ($answer === false) {
-                errorRedirect("");
+            if ($answer === false) {             
+                errorRedirect("5");
             }
         }
 
