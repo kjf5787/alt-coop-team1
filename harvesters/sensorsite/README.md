@@ -12,5 +12,5 @@
 
 ## To-do
 - Make it look good
-- External alerts when moisture level drops too low
+- Cooldown on external alert emails
 - Get constants from Arduino
