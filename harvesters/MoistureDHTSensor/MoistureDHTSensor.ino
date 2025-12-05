@@ -1,7 +1,9 @@
-#include "Arduino_LED_Matrix.h";
-#include "ArduinoGraphics.h";
-#include <WiFiS3.h>;
-ArduinoLEDMatrix matrix;
+#include <WiFiS3.h>
+#include <dht11.h>
+
+dht11 DHT11;
+
+#define DHT11_PIN 7
 
 const int Pins[] = {A0};      // Array of Analog Input pins in use (max 4)
 const int NumPins = sizeof(Pins) / sizeof(Pins[0]); // Divide total size of Pins[] by Pins[0] to get total number of pins used
@@ -32,6 +34,12 @@ void loop() {
     moisturePercent = map(analogRead(Pins[i]), AirValue, WaterValue, 0, 100);
     Serial.println(moisturePercent);
   }
+
+  int read = DHT11.read(DHT11_PIN);
+  Serial.print("Temp (C):");
+  Serial.println((float)DHT11.temperature, 2);
+  Serial.print("Humidity (%):");
+  Serial.println((float)DHT11.humidity, 2);
 
   delay(2000); // 2 seconds between readings
 }
