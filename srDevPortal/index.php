@@ -25,7 +25,6 @@ $group = "home";
 $path = "";
 $title = "Senior Development";
 
-// includes
 require_once ($path . "assets/inc/header.php");
 require_once ($path . "data/Answer.class.php");
 require_once ($path . "data/Answer.DB.class.php");
@@ -50,16 +49,18 @@ $technicalQuestions = $questionDB->getQuestionsByQuestionType('technical');
 
 // load previous student data (empty if they don't exist)
 $student = $studentDB->getStudentById($_SESSION['id']);
-// check if exits before mapping data
-if($student !== false && $student !== null){
-    $studentInfoMap = [
-        "id" => $student->getId(),
-        "preferredName" => $student->getPreferredName(),
-        "major" => $student->getMajor(),
-        "section" => $student->getSection(),
-        "term" => $student->getTerm(),
-        "email" => $student->getEmail()
-    ];
+// map id to id in session
+$studentInfoMap = [
+    "id" => $_SESSION['id'] // always include ID
+];
+// check if exits before mapping other data
+if ($student !== false && $student !== null) {
+    if ($student->getId()) $studentInfoMap['id'] = $student->getId(); // update with one in db, should be the same
+    if ($student->getPreferredName()) $studentInfoMap['preferredName'] = $student->getPreferredName();
+    if ($student->getMajor()) $studentInfoMap['major'] = $student->getMajor();
+    if ($student->getSection()) $studentInfoMap['section'] = $student->getSection();
+    if ($student->getTerm()) $studentInfoMap['term'] = $student->getTerm();
+    if ($student->getEmail()) $studentInfoMap['email'] = $student->getEmail();
 }
 // load previous answers (empty if they don't exist)
 $previousAnswers = $studentAnswerDB->getStudentAnswers($_SESSION['id']);
