@@ -2,6 +2,7 @@
 ini_set('session.gc_maxlifetime', 3600);
 session_set_cookie_params(3600);
 session_start();
+$config = require __DIR__ . "/config/config.php";
 
 // rolling 60-minute expiration, resets every time user interacts with page
 if (!isset($_SESSION['LAST_ACTIVITY'])) {
@@ -15,38 +16,49 @@ if (!isset($_SESSION['LAST_ACTIVITY'])) {
 
 $_SESSION['LAST_ACTIVITY'] = time(); // update timestamp
 
+// redirect users if not logged in
 if (empty($_SESSION['logged_in'])) {
     header("Location: login.php");
     exit;
 }
 
-    $page = "";
-    $group = "home";
-    $path = "";
-    $title = "Admin";
-    require_once ($path . "assets/inc/header.php");
+// redirect non admin users
+if (!in_array($_SESSION['email'], $config['admins'])) {
+    header("Location: unauthorized.php"); 
+    exit;
+}
 
-    require_once ($path . "data/Answer.class.php");
-    require_once ($path . "data/Answer.DB.class.php");
-    require_once ($path . "data/Question.class.php");
-    require_once ($path . "data/Question.DB.class.php");
-    require_once ($path . "data/Student.class.php");
-    require_once ($path . "data/Student.DB.class.php");
+$page = "";
+$group = "home";
+$path = "";
+$title = "Admin";
 
-    // get filter lists from db
-    $answerDB = new AnswerDB();
-    $questionDB = new QuestionDB();
-    $studentDB = new StudentDB();
+require_once ($path . "assets/inc/header.php");
+require_once ($path . "data/Answer.class.php");
+require_once ($path . "data/Answer.DB.class.php");
+require_once ($path . "data/Question.class.php");
+require_once ($path . "data/Question.DB.class.php");
+require_once ($path . "data/Student.class.php");
+require_once ($path . "data/Student.DB.class.php");
 
-    $terms = $answerDB->getAnswerListByQuestionId(52);
-    $sections = $answerDB->getAnswerListByQuestionId(4);
-    $majors = $answerDB->getAnswerListByQuestionId(3);
-    //$questions = $questionDB->getAllRangeQuestions();
-    $students = $studentDB->getAllStudentIds();
+// connect to db
+$answerDB = new AnswerDB();
+$questionDB = new QuestionDB();
+$studentDB = new StudentDB();
 
-    $personalityQuestions = $questionDB->getQuestionsByQuestionType('personality');
-    $technicalQuestions = $questionDB->getQuestionsByQuestionType('technical');
-    $questions = array_merge($personalityQuestions, $technicalQuestions);
+// id values in the db
+$TERM_ID = 52;
+$SECTION_ID = 4;
+$MAJOR_ID = 3;
+
+// get lists of data to filter by
+$terms = $answerDB->getAnswerListByQuestionId($TERM_ID);
+$sections = $answerDB->getAnswerListByQuestionId($SECTION_ID);
+$majors = $answerDB->getAnswerListByQuestionId($MAJOR_ID);
+$students = $studentDB->getAllStudentIds();
+$personalityQuestions = $questionDB->getQuestionsByQuestionType('personality');
+$technicalQuestions = $questionDB->getQuestionsByQuestionType('technical');
+$questions = array_merge($personalityQuestions, $technicalQuestions);
 
 ?>
 
@@ -61,6 +73,7 @@ if (empty($_SESSION['logged_in'])) {
 
                 <span>Filter</span>
 
+                <!-- term filter -->
                 <div class="filter">
                     <div class="filter-item">Term</div>
                     <div class="filter-options">
@@ -73,6 +86,7 @@ if (empty($_SESSION['logged_in'])) {
                     </div>
                 </div>
 
+                <!-- section filter -->
                 <div class="filter">
                     <div class="filter-item">Section</div>
                     <div class="filter-options">
@@ -85,6 +99,7 @@ if (empty($_SESSION['logged_in'])) {
                     </div>
                 </div>
 
+                <!-- major filter -->
                 <div class="filter">
                     <div class="filter-item">Major</div>
                     <div class="filter-options">
@@ -97,6 +112,7 @@ if (empty($_SESSION['logged_in'])) {
                     </div>
                 </div>
 
+                <!-- question filter -->
                 <div class="filter">
                     <div class="filter-item">Question</div>
                     <div class="filter-options">
@@ -109,6 +125,7 @@ if (empty($_SESSION['logged_in'])) {
                     </div>
                 </div>
 
+                <!-- student filter -->
                 <div class="filter">
                     <div class="filter-item">Student</div>
                     <div class="filter-options">
@@ -121,6 +138,7 @@ if (empty($_SESSION['logged_in'])) {
                     </div>
                 </div>
 
+                <!-- sort filter -->
                 <div class="filter">
                     <div class="filter-item">Sort</div>
                     <div class="filter-options">
