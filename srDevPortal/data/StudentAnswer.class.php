@@ -1,5 +1,10 @@
 <?php 
 
+/**
+ * Class StudentAnswer
+ *
+ * Represents a StudentAnswer in the database.
+ */
 class StudentAnswer {
     private $id;
     private $student_id;

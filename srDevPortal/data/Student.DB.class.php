@@ -46,6 +46,7 @@ class StudentDB extends DB {
     }
 
     // gets the ids of all students
+    // returns an array of id strings
     function getAllStudentIds() {
         $query = "SELECT id FROM students";
         $data = [];
@@ -89,6 +90,7 @@ class StudentDB extends DB {
     }
 
     // updates a student
+    // returns true if successful 
     function updateStudent($id, $email, $preferredName, $major, $section, $term) {
         $query = "UPDATE students SET email = :email, preferredName = :preferredName, major = :major, section = :section, term = :term WHERE id = :id";
     

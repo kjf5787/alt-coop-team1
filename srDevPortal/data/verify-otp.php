@@ -51,7 +51,9 @@ $result = json_decode($response, true);
 
 if ($result['valid']) {
     session_start();
-    $_SESSION['user_email'] = $email;
+    $_SESSION['logged_in'] = true;
+    $_SESSION['email'] = $email;
+    $_SESSION['id'] = strstr($email, "@", true);
     
     echo json_encode([
         'success' => true,

@@ -30,7 +30,7 @@ class QuestionDB extends DB {
 
     // gets all question objects
     // returns an array of Question objects ordered by type
-    function getAllQuestions(){
+    function getQuestionObjects(){
 
         $query = "SELECT * FROM questions ORDER BY question_type";
         $data = [];
@@ -50,6 +50,7 @@ class QuestionDB extends DB {
     }
 
     // gets all questions
+    // returns an array of Question strings
     function getQuestions() {
         $query = "SELECT question FROM questions ORDER BY question_type";
         $data = [];

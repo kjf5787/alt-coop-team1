@@ -29,7 +29,7 @@ class AnswerDB extends DB {
     }
 
     // gets list of only answers for a question by its id
-    // returns array 
+    // returns array
     function getAnswerListByQuestionId($id) {
 
         $query = "SELECT answer FROM answers WHERE question_id = :id";

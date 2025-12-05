@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Class DB
+ *
+ * Manages the database connection using PDO
+ * Connects to a MySQL database using credentials from the server environment
+ * Has a method to retrieve the PDO connection
+ * Has a method to close the connection
+ */
 class DB {
     protected $db;
 

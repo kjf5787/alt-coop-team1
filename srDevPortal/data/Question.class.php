@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class Question
+ *
+ * Represents a Question in the database.
+ */
 class Question {
     private $id;
     private $question;

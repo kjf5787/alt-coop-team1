@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class Student
+ *
+ * Represents an Student in the database.
+ */
 class Student {
     private $id;
     private $email;
