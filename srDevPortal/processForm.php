@@ -12,7 +12,8 @@ $studentAnswerDB = new StudentAnswerDB();
 
 // function to redirect to submissionError.php 
 function errorRedirect($msg) {
-    header("Location: submissionError.php?msg=" . urlencode($msg));
+    // header("Location: submissionError.php?msg=" . urlencode($msg)); // for testing 
+    header("Location: submissionError.php");
     exit;
 }
 
