@@ -9,7 +9,6 @@
     <div class="e-box">
         <div class="error-box">
             <p>ERROR: Response not recorded.</p>
-            <p><?= htmlspecialchars($message) ?></p>
             <a href="index.php" class="back-btn">Back to Form</a>
         </div>
     </div>
